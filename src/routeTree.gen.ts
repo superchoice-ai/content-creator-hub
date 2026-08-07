@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PostsSlugRouteImport } from './routes/posts.$slug'
 import { Route as ApiPublicPublishRouteImport } from './routes/api/public/publish'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostsSlugRoute = PostsSlugRouteImport.update({
+  id: '/posts/$slug',
+  path: '/posts/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicPublishRoute = ApiPublicPublishRouteImport.update({
@@ -25,27 +31,31 @@ const ApiPublicPublishRoute = ApiPublicPublishRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/posts/$slug': typeof PostsSlugRoute
   '/api/public/publish': typeof ApiPublicPublishRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/posts/$slug': typeof PostsSlugRoute
   '/api/public/publish': typeof ApiPublicPublishRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/posts/$slug': typeof PostsSlugRoute
   '/api/public/publish': typeof ApiPublicPublishRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/public/publish'
+  fullPaths: '/' | '/posts/$slug' | '/api/public/publish'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/public/publish'
-  id: '__root__' | '/' | '/api/public/publish'
+  to: '/' | '/posts/$slug' | '/api/public/publish'
+  id: '__root__' | '/' | '/posts/$slug' | '/api/public/publish'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PostsSlugRoute: typeof PostsSlugRoute
   ApiPublicPublishRoute: typeof ApiPublicPublishRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/posts/$slug': {
+      id: '/posts/$slug'
+      path: '/posts/$slug'
+      fullPath: '/posts/$slug'
+      preLoaderRoute: typeof PostsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/publish': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PostsSlugRoute: PostsSlugRoute,
   ApiPublicPublishRoute: ApiPublicPublishRoute,
 }
 export const routeTree = rootRouteImport
