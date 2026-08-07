@@ -44,7 +44,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { posts } = Route.useLoaderData();
+  const { posts } = Route.useLoaderData() as { posts: PostCard[] };
 
   return (
     <div className="min-h-screen bg-background">
