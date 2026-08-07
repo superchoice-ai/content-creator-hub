@@ -14,7 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      cms_posts: {
+        Row: {
+          body: string
+          channel: string
+          content_format: string
+          cover_image_url: string | null
+          created_at: string
+          excerpt: string | null
+          external_id: string | null
+          id: string
+          published_at: string
+          run_id: string | null
+          slug: string
+          source: string
+          status: string
+          tags: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string
+          channel?: string
+          content_format?: string
+          cover_image_url?: string | null
+          created_at?: string
+          excerpt?: string | null
+          external_id?: string | null
+          id?: string
+          published_at?: string
+          run_id?: string | null
+          slug: string
+          source?: string
+          status?: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          channel?: string
+          content_format?: string
+          cover_image_url?: string | null
+          created_at?: string
+          excerpt?: string | null
+          external_id?: string | null
+          id?: string
+          published_at?: string
+          run_id?: string | null
+          slug?: string
+          source?: string
+          status?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
