@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
+import { formatPostDate } from "@/lib/format-date";
 
 type Post = {
   id: string;
@@ -69,7 +70,7 @@ function PostPage() {
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <span className="rounded bg-secondary px-2 py-0.5">{post.channel}</span>
           <time dateTime={post.published_at}>
-            {new Date(post.published_at).toLocaleDateString("th-TH")}
+            {formatPostDate(post.published_at)}
           </time>
         </div>
         <h1 className="mt-4 text-3xl font-semibold tracking-tight text-foreground">{post.title}</h1>
