@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
+import { formatPostDate } from "@/lib/format-date";
 
 type PostCard = {
   id: string;
@@ -92,7 +93,7 @@ function Index() {
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <span className="rounded bg-secondary px-2 py-0.5">{post.channel}</span>
                       <time dateTime={post.published_at}>
-                        {new Date(post.published_at).toLocaleDateString("th-TH")}
+                        {formatPostDate(post.published_at)}
                       </time>
                     </div>
                     <h2 className="mt-3 text-lg font-semibold leading-snug text-card-foreground">
