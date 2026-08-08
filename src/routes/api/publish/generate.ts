@@ -33,6 +33,7 @@ export const Route = createFileRoute("/api/publish/generate")({
             "x",
             "line_oa",
             "linkedin",
+            "tiktok",
           ];
           if (channels.some((channel: string) => !allowed.includes(channel)))
             return json({ error: "unsupported channel" }, 400);
