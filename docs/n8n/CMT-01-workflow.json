@@ -1,0 +1,86 @@
+{
+  "name": "CMT-01 Publish Orchestrator",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "publish-cmt-01",
+        "httpMethod": "POST",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "values": [
+          {
+            "name": "jobId",
+            "value": "=\u003d{{ 'job-' + Date.now() }}"
+          }
+        ],
+        "options": {}
+      },
+      "name": "Set Job",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://httpbin.org/post",
+        "options": {},
+        "responseFormat": "json",
+        "method": "POST",
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "jobId",
+              "value": "={{ $json.jobId }}"
+            },
+            {
+              "name": "payload",
+              "value": "={{ JSON.stringify($json.payload) }}"
+            },
+            {
+              "name": "selectedChannels",
+              "value": "={{ JSON.stringify($json.selectedChannels) }}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request (Mock Publish)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [650, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set Job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Job": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request (Mock Publish)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}
