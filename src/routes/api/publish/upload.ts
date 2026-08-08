@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { adminError, requireAdmin } from "@/lib/admin-auth.server";
 
 const MAX_BYTES = 100 * 1024 * 1024;
 
@@ -17,6 +18,7 @@ export const Route = createFileRoute("/api/publish/upload")({
     handlers: {
       POST: async ({ request }) => {
         try {
+          await requireAdmin(request);
           if (!authorized(request)) return json({ error: "unauthorized" }, 401);
 
           const form = await request.formData();
@@ -52,6 +54,7 @@ export const Route = createFileRoute("/api/publish/upload")({
           try { result = text ? JSON.parse(text) : {}; } catch { result = { response: text }; }
           return json({ ok: true, uploadId, filename: file.name, ...result }, 201);
         } catch (error) {
+          if (error instanceof Response) return adminError(error);
           return json({ error: error instanceof Error ? error.message : String(error) }, 500);
         }
       },
