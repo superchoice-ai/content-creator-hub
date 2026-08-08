@@ -59,9 +59,17 @@ function Index() {
               Content Portal
             </h1>
           </div>
-          <span className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
-            {posts.length} posts
-          </span>
+
+          <div className="flex items-center gap-4">
+            <span className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
+              {posts.length} posts
+            </span>
+
+            {/* Link to Publish page so UI is discoverable */}
+            <Link to="/publish" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">
+              Publish
+            </Link>
+          </div>
         </div>
       </header>
 
