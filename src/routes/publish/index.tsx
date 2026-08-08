@@ -69,7 +69,7 @@ function PublishRoute() {
     sourceType === "google_drive"
       ? driveFileId(driveValue).length > 5
       : sourceType === "local_upload"
-        ? !!localFile && localFile.size <= 50 * 1024 * 1024
+        ? !!localFile && localFile.size <= 100 * 1024 * 1024
         : true;
   const previewReady = selected.length > 0 && Object.keys(drafts).length > 0;
   const liveReady = dryRun || (approved && token.length > 0);
@@ -271,8 +271,8 @@ function PublishRoute() {
                 accept="video/*"
                 onChange={(e) => setLocalFile(e.target.files?.[0] ?? null)}
               />
-              <p className="text-xs text-slate-400">ไฟล์ไม่เกิน 50 MB ใช้ Protected Storage; ไฟล์ใหญ่กว่านี้ให้ใช้ Google Drive URL/File ID</p>
-              {localFile && localFile.size > 50 * 1024 * 1024 && <p className="text-sm text-amber-300">ไฟล์เกิน 50 MB — กรุณาเลือก Google Drive</p>}
+              <p className="text-xs text-slate-400">ไฟล์ไม่เกิน 100 MB ใช้ Protected Storage; ไฟล์ใหญ่กว่านี้ให้ใช้ Google Drive URL/File ID</p>
+              {localFile && localFile.size > 100 * 1024 * 1024 && <p className="text-sm text-amber-300">ไฟล์เกิน 100 MB — กรุณาเลือก Google Drive</p>}
               </div>
             )}
             {sourceType === "heygen" && (
