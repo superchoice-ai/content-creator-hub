@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-const MAX_BYTES = 500 * 1024 * 1024;
+const MAX_BYTES = 50 * 1024 * 1024;
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/api/publish/upload")({
 
           if (!(file instanceof File)) return json({ error: "video file is required" }, 400);
           if (!file.type.startsWith("video/")) return json({ error: "only video files are accepted" }, 415);
-          if (file.size > MAX_BYTES) return json({ error: "file exceeds 500 MB; use Google Drive for larger videos" }, 413);
+          if (file.size > MAX_BYTES) return json({ error: "file exceeds 50 MB; use Google Drive URL/File ID" }, 413);
           if (!approved || dryRun) return json({ error: "local upload requires approved=true and dry_run=false" }, 409);
 
           const n8nUrl = process.env["N8N_YOUTUBE_UPLOAD_WEBHOOK_URL"];
