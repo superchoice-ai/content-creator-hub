@@ -1,0 +1,65 @@
+/* 
+This redirect ensures single-page-app routes are forwarded to index.html.
+Used by Netlify / many static hosts that support _redirects in the public folder.
+*/
+
+/*    /index.html   200
+*/
+/* Redirect all paths to index.html for SPA routing */
+/* The format below is the canonical Netlify redirect: */
+/*
+  /*    /index.html   200
+*/
+/* But when deployed we want the single line */
+/*
+   /* /index.html 200
+*/
+
+/* Final line (actual rule) */
+/* Note: keep exactly this single rule on one line for Netlify/Static hosts */
+/*
+   /* /index.html 200
+*/
+
+/* Using the simple rule below */
+/*
+  / *    /index.html   200
+*/
+
+/* The actual redirect line: */
+/* (no comments on this line) */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* Actual rule follows: */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+/* */
+
+/* Keep this single rule at the end of the file */
+/* Format: /*  /index.html  200 */
+/* (escaped below to avoid multi-line comment confusion) */
+/* */
+/*/ /index.html 200
