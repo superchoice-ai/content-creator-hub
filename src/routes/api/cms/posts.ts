@@ -53,7 +53,7 @@ export const Route = createFileRoute("/api/cms/posts")({
             channel: input.channel,
             status: input.status,
             source: "manual_admin",
-            published_at: input.status === "published" ? new Date().toISOString() : null,
+            published_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           };
           const { data, error } = await supabaseAdmin.from("cms_posts").upsert(row, { onConflict: "slug" }).select("*").single();
