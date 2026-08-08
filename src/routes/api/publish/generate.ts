@@ -1,66 +1,88 @@
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const { sourceType, brief, channels } = body;
+import { createFileRoute } from "@tanstack/react-router";
 
-    if (!sourceType || !brief || !channels) {
-      return new Response(JSON.stringify({ error: 'missing required fields: sourceType, brief, channels' }), { status: 400 });
-    }
-
-    const now = new Date().toISOString();
-
-    // Example AI-generated payload shaped to docs/CONTENT_PUBLISHING_SPEC.md
-    const response = {
-      meta: {
-        sourceType,
-        generatedAt: now,
-        model: 'gpt-4x',
-      },
-      channels: {},
-      heygen: undefined,
-    };
-
-    // Populate channel payloads with simple templated text
-    for (const ch of channels) {
-      if (ch === 'youtube') {
-        response.channels.youtube = {
-          title: `${brief.title} | SuperChoice AI`,
-          description: brief.description || 'Auto-generated description',
-          hashtags: ['#AI', '#SuperChoice'],
-          privacy: 'private',
-        };
-      } else if (ch === 'instagram') {
-        response.channels.instagram = {
-          hook: `Hook: ${brief.title}`,
-          caption: `${brief.title} — ${brief.cta || ''}`,
-          hashtags: ['#shorts', '#AI'],
-          cta: brief.cta || 'Learn more',
-        };
-      } else if (ch === 'x') {
-        response.channels.x = {
-          text: `${brief.title} — ${brief.cta || ''}`,
-          maxLength: 280,
-        };
-      } else {
-        // generic channel payload
-        response.channels[ch] = {
-          caption: `${brief.title} — ${brief.cta || ''}`,
-        };
-      }
-    }
-
-    // If the user requested HeyGen suggestions, provide a simple script
-    if (sourceType === 'heygen') {
-      response.heygen = {
-        script: `Intro: ${brief.title}\nKey points: ...\nCTA: ${brief.cta || 'Contact us'}`,
-        scenes: [{ start: 0, end: 10, text: 'Intro scene' }],
-        suggestedAvatarId: body.heygenOptions?.avatarId || 'heygen-default-avatar',
-        suggestedVoiceId: body.heygenOptions?.voiceId || 'heygen-default-voice',
-      };
-    }
-
-    return new Response(JSON.stringify(response), { status: 200, headers: { 'Content-Type': 'application/json' } });
-  } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message || String(err) }), { status: 500 });
-  }
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
 }
+
+export const Route = createFileRoute("/api/publish/generate")({
+  server: {
+    handlers: {
+      POST: async ({ request }) => {
+        try {
+          const body = await request.json();
+          const { sourceType, brief, channels, heygenOptions } = body;
+          if (
+            !sourceType ||
+            !brief?.title?.trim() ||
+            !Array.isArray(channels) ||
+            channels.length === 0
+          )
+            return json(
+              { error: "sourceType, brief.title and channels are required" },
+              400,
+            );
+          const allowed = [
+            "youtube",
+            "facebook_page",
+            "facebook_group",
+            "instagram",
+            "threads",
+            "x",
+            "line_oa",
+            "linkedin",
+          ];
+          if (channels.some((channel: string) => !allowed.includes(channel)))
+            return json({ error: "unsupported channel" }, 400);
+          const n8nUrl = process.env["N8N_CONTENT_GENERATE_WEBHOOK_URL"];
+          if (!n8nUrl)
+            return json(
+              { error: "N8N_CONTENT_GENERATE_WEBHOOK_URL is not configured" },
+              503,
+            );
+          const secret = process.env["N8N_WEBHOOK_SECRET"];
+          const upstream = await fetch(n8nUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(secret ? { "X-Webhook-Secret": secret } : {}),
+            },
+            body: JSON.stringify({
+              sourceType,
+              brief,
+              channels,
+              heygenOptions,
+              ai_calls: 1,
+              dry_run: true,
+              approved: false,
+            }),
+          });
+          const text = await upstream.text();
+          if (!upstream.ok)
+            return json(
+              {
+                error: "n8n rejected content generation",
+                upstreamStatus: upstream.status,
+                details: text.slice(0, 500),
+              },
+              502,
+            );
+          let result: unknown;
+          try {
+            result = JSON.parse(text);
+          } catch {
+            return json({ error: "n8n returned invalid JSON" }, 502);
+          }
+          return json(result);
+        } catch (error) {
+          return json(
+            { error: error instanceof Error ? error.message : String(error) },
+            500,
+          );
+        }
+      },
+    },
+  },
+});
