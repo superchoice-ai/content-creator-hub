@@ -9,6 +9,7 @@ const ALLOWED = [
   "x",
   "line_oa",
   "linkedin",
+  "tiktok",
 ];
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
