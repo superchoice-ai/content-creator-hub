@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { formatPostDate } from "@/lib/format-date";
+import { useAdminAccess } from "@/lib/use-admin-access";
 
 type PostCard = {
   id: string;
@@ -45,6 +46,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const admin = useAdminAccess();
   const { posts } = Route.useLoaderData() as { posts: PostCard[] };
 
   return (
@@ -65,10 +67,14 @@ function Index() {
               {posts.length} posts
             </span>
 
-            {/* Link to Publish page so UI is discoverable */}
-            <Link to="/publish" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">
-              Publish
-            </Link>
+            {admin.allowed ? (
+              <>
+                <Link to="/cms" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">CMS</Link>
+                <Link to="/publish" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">Publish</Link>
+              </>
+            ) : (
+              <Link to="/login" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">Login</Link>
+            )}
           </div>
         </div>
       </header>
