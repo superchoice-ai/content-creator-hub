@@ -3,7 +3,7 @@ import type { User } from "@supabase/supabase-js";
 export type AdminSession = { user: User; role: "admin" };
 
 export async function requireAdmin(request: Request): Promise<AdminSession> {
-  const token = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
+  const token = request.headers.get("x-admin-access-token") ?? request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
   if (!token) throw new Response("unauthorized", { status: 401 });
 
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
