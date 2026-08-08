@@ -1,40 +1,60 @@
-import fs from 'fs';
-import path from 'path';
+import { createFileRoute } from "@tanstack/react-router";
 
-// Simple upload endpoint for local files sent as base64 JSON
-// Stores uploads in .uploads/ with a generated uploadId and writes a JSON index
+const MAX_BYTES = 500 * 1024 * 1024;
 
-const UPLOAD_DIR = path.resolve(process.cwd(), '.uploads');
-const INDEX_FILE = path.join(UPLOAD_DIR, 'index.json');
-
-function ensureUploadDir() {
-  if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-  if (!fs.existsSync(INDEX_FILE)) fs.writeFileSync(INDEX_FILE, JSON.stringify({ uploads: {} }, null, 2));
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
 }
 
-function saveUpload(filename: string, base64: string, mimeType: string) {
-  ensureUploadDir();
-  const uploadId = `upload-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-  const outPath = path.join(UPLOAD_DIR, uploadId + path.extname(filename));
-  const buffer = Buffer.from(base64, 'base64');
-  fs.writeFileSync(outPath, buffer);
-  const index = JSON.parse(fs.readFileSync(INDEX_FILE, 'utf8'));
-  index.uploads[uploadId] = { id: uploadId, filename, path: outPath, mimeType, createdAt: new Date().toISOString() };
-  fs.writeFileSync(INDEX_FILE, JSON.stringify(index, null, 2));
-  return { uploadId, outPath };
+function authorized(request: Request) {
+  const expected = process.env["PORTAL_PUBLISH_TOKEN"];
+  const provided = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
+  return !!expected && provided === expected;
 }
 
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const { filename, contentBase64, mimeType } = body;
-    if (!filename || !contentBase64) return new Response(JSON.stringify({ error: 'missing filename or contentBase64' }), { status: 400 });
+export const Route = createFileRoute("/api/publish/upload")({
+  server: {
+    handlers: {
+      POST: async ({ request }) => {
+        try {
+          if (!authorized(request)) return json({ error: "unauthorized" }, 401);
 
-    const { uploadId, outPath } = saveUpload(filename, contentBase64, mimeType || 'application/octet-stream');
+          const form = await request.formData();
+          const file = form.get("file");
+          const approved = form.get("approved") === "true";
+          const dryRun = form.get("dry_run") !== "false";
 
-    // Optionally forward to n8n upload fetcher endpoint — n8n workflow has an HTTP GET to pull the file by uploadId
-    return new Response(JSON.stringify({ uploadId, note: 'stored', path: outPath }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-  } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message || String(err) }), { status: 500 });
-  }
-}
+          if (!(file instanceof File)) return json({ error: "video file is required" }, 400);
+          if (!file.type.startsWith("video/")) return json({ error: "only video files are accepted" }, 415);
+          if (file.size > MAX_BYTES) return json({ error: "file exceeds 500 MB; use Google Drive for larger videos" }, 413);
+          if (!approved || dryRun) return json({ error: "local upload requires approved=true and dry_run=false" }, 409);
+
+          const n8nUrl = process.env["N8N_YOUTUBE_UPLOAD_WEBHOOK_URL"];
+          const n8nSecret = process.env["N8N_WEBHOOK_SECRET"];
+          if (!n8nUrl) return json({ error: "N8N_YOUTUBE_UPLOAD_WEBHOOK_URL is not configured" }, 503);
+
+          const uploadId = `upload-${crypto.randomUUID()}`;
+          const outgoing = new FormData();
+          outgoing.set("file", file, file.name);
+          outgoing.set("uploadId", uploadId);
+          outgoing.set("approved", "true");
+          outgoing.set("dry_run", "false");
+
+          const upstream = await fetch(n8nUrl, {
+            method: "POST",
+            headers: n8nSecret ? { "X-Webhook-Secret": n8nSecret } : undefined,
+            body: outgoing,
+          });
+          const text = await upstream.text();
+          if (!upstream.ok) return json({ error: "n8n rejected local upload", upstreamStatus: upstream.status, details: text.slice(0, 500) }, 502);
+
+          let result: Record<string, unknown> = {};
+          try { result = text ? JSON.parse(text) : {}; } catch { result = { response: text }; }
+          return json({ ok: true, uploadId, filename: file.name, ...result }, 201);
+        } catch (error) {
+          return json({ error: error instanceof Error ? error.message : String(error) }, 500);
+        }
+      },
+    },
+  },
+});
