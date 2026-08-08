@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { adminError, requireAdmin } from "@/lib/admin-auth.server";
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/api/publish/generate")({
     handlers: {
       POST: async ({ request }) => {
         try {
+          await requireAdmin(request);
           const body = await request.json();
           const { sourceType, brief, channels, heygenOptions } = body;
           if (
@@ -78,10 +80,8 @@ export const Route = createFileRoute("/api/publish/generate")({
           }
           return json(result);
         } catch (error) {
-          return json(
-            { error: error instanceof Error ? error.message : String(error) },
-            500,
-          );
+          if (error instanceof Response) return adminError(error);
+          return json({ error: error instanceof Error ? error.message : String(error) }, 500);
         }
       },
     },
