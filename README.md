@@ -4,7 +4,7 @@
 
 This project was built with [Lovable](https://lovable.dev).
 
-## Build with Lovable
+Primary editor: Lovable — all UI work should start in Lovable on feature branches named `feat/lovable/*`. See CONTRIBUTING.md for details.
 
 Continue developing this project in the [Lovable editor](https://lovable.dev/projects/562dedca-7e64-4a79-851e-e97cc7dc2fef).
 
@@ -22,3 +22,5 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+See docs/CONTENT_PUBLISHING_SPEC.md for the Content Publishing spec and src/routes/publish/ for the Lovable-first skeleton.
