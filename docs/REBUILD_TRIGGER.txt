@@ -2,4 +2,4 @@ Rebuild trigger
 
 This file is updated to force a new build/deploy in preview environments (Lovable preview / static hosts watching the repo).
 
-Timestamp: 2026-08-08T05:51:30Z
+Timestamp: 2026-08-08T07:50:00Z
