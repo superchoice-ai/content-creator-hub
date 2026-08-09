@@ -2,6 +2,8 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
+const viteEnv = import.meta.env as unknown as Record<string, string | undefined>;
+
 function serverEnv(key: string): string | undefined {
   try {
     return typeof process !== 'undefined' ? process.env?.[key] : undefined;
@@ -10,10 +12,14 @@ function serverEnv(key: string): string | undefined {
   }
 }
 
-function canonicalProjectRef(): string | undefined {
-  const ref = import.meta.env.VITE_SUPABASE_PROJECT_ID || serverEnv('SUPABASE_PROJECT_ID');
-  return ref || undefined;
+function readEnv(viteKey: string, serverKey: string): string | undefined {
+  return viteEnv[viteKey] || serverEnv(serverKey);
 }
+
+function canonicalProjectRef(): string | undefined {
+  return readEnv('VITE_SUPABASE_PROJECT_ID', 'SUPABASE_PROJECT_ID') || undefined;
+}
+
 
 
 function isNewSupabaseApiKey(value: string): boolean {
