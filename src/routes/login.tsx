@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { lovable } from "@/integrations/lovable/index";
-import { useEffect, useState } from "react";
-import { LINE_LIFF_ID, LINE_LIFF_URL } from "@/config/line";
-import { loadLiff } from "@/lib/liff-client";
+import { useEffect, useRef, useState } from "react";
+import { LINE_LIFF_URL } from "@/config/line";
+import { initLiff } from "@/lib/liff-client";
 
 export const Route = createFileRoute("/login")({ component: LoginPage });
 
@@ -24,65 +24,61 @@ function safeReturnUrl() {
 
 function LoginPage() {
   const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+  const redirected = useRef(false);
 
+  // The shared IdentityBootstrap performs the LINE/Supabase session exchange.
+  // Here we only leave the login page once an identity is actually resolved,
+  // and only a single time, so the page cannot loop or re-refresh itself.
   useEffect(() => {
-    let active = true;
-    async function completeLineLogin() {
-      const liff = await loadLiff();
-      await liff.init({ liffId: LINE_LIFF_ID, withLoginOnExternalBrowser: true });
-      if (!liff.isLoggedIn()) return;
-
-      const idToken = liff.getIDToken();
-      const accessToken = liff.getAccessToken();
-      if (!idToken || !accessToken) throw new Error("LINE identity token is unavailable");
-
-      const response = await fetch("/api/auth/line/liff", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
-        body: JSON.stringify({ idToken, accessToken }),
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error ?? "LINE login failed");
-
-      window.dispatchEvent(new CustomEvent("sc:identity", { detail: result }));
+    function onIdentity(event: Event) {
+      const detail = (event as CustomEvent).detail as { role?: string } | undefined;
+      if (!detail || detail.role === "guest" || redirected.current) return;
+      redirected.current = true;
       window.location.replace(safeReturnUrl());
     }
-
-    void completeLineLogin().catch((error) => {
-      if (active) setMessage(error instanceof Error ? error.message : String(error));
-    });
-    return () => {
-      active = false;
-    };
+    window.addEventListener("sc:identity", onIdentity);
+    return () => window.removeEventListener("sc:identity", onIdentity);
   }, []);
 
   async function googleLogin() {
-    sessionStorage.setItem(RETURN_URL_KEY, "/");
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      setMessage(result.error.message);
-      return;
-    }
-    if (result.redirected) return;
-    window.location.replace(safeReturnUrl());
-  }
-
-
-  async function lineLogin() {
+    setBusy(true);
+    setMessage("");
     try {
       sessionStorage.setItem(RETURN_URL_KEY, "/");
-      const liff = await loadLiff();
-      await liff.init({ liffId: LINE_LIFF_ID, withLoginOnExternalBrowser: true });
-      if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: window.location.href });
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) {
+        setMessage(result.error.message);
         return;
       }
-      window.location.reload();
+      if (result.redirected) return;
+      redirected.current = true;
+      window.location.replace(safeReturnUrl());
     } catch (error) {
       setMessage(error instanceof Error ? error.message : String(error));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function lineLogin() {
+    setBusy(true);
+    setMessage("");
+    try {
+      sessionStorage.setItem(RETURN_URL_KEY, "/");
+      const liff = await initLiff();
+      if (!liff.isLoggedIn()) {
+        liff.login({ redirectUri: `${window.location.origin}/login` });
+        return;
+      }
+      redirected.current = true;
+      window.location.replace(safeReturnUrl());
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -91,8 +87,8 @@ function LoginPage() {
       <section className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-7">
         <h1 className="text-2xl font-bold">SuperChoice AI Login</h1>
         <p className="mt-2 text-sm text-slate-400">Admin และ Member เข้าสู่ระบบด้วย Google หรือ LINE</p>
-        <button onClick={googleLogin} className="mt-6 w-full rounded-xl bg-white px-4 py-3 font-semibold text-slate-950">Continue with Google</button>
-        <button onClick={lineLogin} className="mt-3 block w-full rounded-xl bg-[#06c755] px-4 py-3 text-center font-semibold text-white">Continue with LINE</button>
+        <button disabled={busy} onClick={googleLogin} className="mt-6 w-full rounded-xl bg-white px-4 py-3 font-semibold text-slate-950 disabled:opacity-60">Continue with Google</button>
+        <button disabled={busy} onClick={lineLogin} className="mt-3 block w-full rounded-xl bg-[#06c755] px-4 py-3 text-center font-semibold text-white disabled:opacity-60">Continue with LINE</button>
         <p className="mt-4 rounded-lg bg-slate-950 p-3 text-sm text-slate-400">Browser ที่ยังไม่ยืนยันตัวตนเป็น Guest และเห็นเฉพาะ Published content — ใช้ Google หรือ LINE เพื่อสมัคร/เข้าแบบ Member</p>
         <a href={LINE_LIFF_URL} className="mt-3 block text-center text-xs text-slate-500">เปิดผ่านแอป LINE</a>
         {message ? <p className="mt-4 text-sm text-red-300">{message}</p> : null}
