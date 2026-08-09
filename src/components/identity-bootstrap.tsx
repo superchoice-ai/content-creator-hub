@@ -45,8 +45,13 @@ export function IdentityBootstrap() {
         credentials: "same-origin",
         body: JSON.stringify({ idToken, accessToken }),
       });
-      if (response.ok && active) emit(await response.json());
-      else if (active) emit({ role: "guest", inLineClient: liff.isInClient() });
+      if (response.ok && active) {
+        const identity = await response.json();
+        emit(identity);
+        if (window.location.pathname.startsWith("/publish") && identity.role !== "admin") {
+          window.location.replace("/");
+        }
+      } else if (active) emit({ role: "guest", inLineClient: liff.isInClient() });
     }
 
     void boot().catch((error) => {
