@@ -22,7 +22,6 @@ export default function PublishPage() {
       const body: PublishFormState = {
         sourceType: sourceData.sourceType,
         googleDriveFileId: sourceData.googleDriveFileId,
-        localFileId: undefined,
         heygenOptions: sourceData.heygenOptions,
         brief,
         channels: channelsState.channels,
