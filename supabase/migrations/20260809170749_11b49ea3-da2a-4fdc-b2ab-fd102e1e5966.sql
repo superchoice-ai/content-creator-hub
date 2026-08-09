@@ -1,0 +1,1 @@
+insert into public.app_user_roles (user_id, role) values ('1878cf07-a559-4482-b4d8-46bd0e24d9b7','admin') on conflict do nothing; update public.crm_user_profiles set role='admin' where auth_user_id='1878cf07-a559-4482-b4d8-46bd0e24d9b7';
