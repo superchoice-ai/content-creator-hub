@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       cms_posts: {
         Row: {
           body: string
@@ -67,6 +88,48 @@ export type Database = {
           status?: string
           tags?: string[]
           title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      crm_user_profiles: {
+        Row: {
+          auth_user_id: string | null
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          last_login_at: string | null
+          picture_url: string | null
+          provider: string
+          provider_user_id: string
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          auth_user_id?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          last_login_at?: string | null
+          picture_url?: string | null
+          provider: string
+          provider_user_id: string
+          role?: string
+          updated_at?: string
+        }
+        Update: {
+          auth_user_id?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          last_login_at?: string | null
+          picture_url?: string | null
+          provider?: string
+          provider_user_id?: string
+          role?: string
           updated_at?: string
         }
         Relationships: []
