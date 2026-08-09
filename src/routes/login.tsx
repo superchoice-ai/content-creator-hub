@@ -42,10 +42,25 @@ function LoginPage() {
   }, []);
 
 
+  function inIframe() {
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
+  }
+
   async function lineLogin() {
     setBusy(true);
     setMessage("");
     try {
+      // LINE blocks framing (X-Frame-Options), so inside the Lovable preview
+      // iframe we must escape to a real top-level tab instead of redirecting.
+      if (inIframe()) {
+        window.open(LINE_LIFF_URL, "_blank", "noopener,noreferrer");
+        setMessage("เปิดหน้าเข้าสู่ระบบ LINE ในแท็บใหม่แล้ว (LINE ไม่อนุญาตให้แสดงในหน้าตัวอย่าง)");
+        return;
+      }
       sessionStorage.setItem(RETURN_URL_KEY, "/");
       const liff = await initLiff();
       if (!liff.isLoggedIn()) {
