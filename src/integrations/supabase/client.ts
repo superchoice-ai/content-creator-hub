@@ -66,11 +66,12 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 }
 
 function createSupabaseClient() {
-  const configuredUrl =
-    import.meta.env['VITE_SUPABASE_URL'] || process.env['SUPABASE_URL'];
-  const publishableKey =
-    import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'] ||
-    process.env['SUPABASE_PUBLISHABLE_KEY'];
+  const configuredUrl = readEnv('VITE_SUPABASE_URL', 'SUPABASE_URL');
+  const publishableKey = readEnv(
+    'VITE_SUPABASE_PUBLISHABLE_KEY',
+    'SUPABASE_PUBLISHABLE_KEY',
+  );
+
 
   if (!configuredUrl || !publishableKey) {
     const missing = [
