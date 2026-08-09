@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { LINE_LIFF_URL } from "@/config/line";
 import { initLiff } from "@/lib/liff-client";
+import { lovable } from "@/integrations/lovable/index";
 
 export const Route = createFileRoute("/login")({ component: LoginPage });
 
@@ -60,13 +61,36 @@ function LoginPage() {
     }
   }
 
+  async function googleLogin() {
+    setBusy(true);
+    setMessage("");
+    try {
+      sessionStorage.setItem(RETURN_URL_KEY, "/");
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) {
+        setMessage(result.error.message ?? "Google sign-in failed");
+        return;
+      }
+      if (result.redirected) return;
+      redirected.current = true;
+      window.location.replace(safeReturnUrl());
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 p-6 text-slate-100">
       <section className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-7">
         <h1 className="text-2xl font-bold">SuperChoice AI Login</h1>
-        <p className="mt-2 text-sm text-slate-400">เข้าสู่ระบบด้วย LINE</p>
+        <p className="mt-2 text-sm text-slate-400">เข้าสู่ระบบด้วย LINE หรือ Google</p>
         <button disabled={busy} onClick={lineLogin} className="mt-6 block w-full rounded-xl bg-[#06c755] px-4 py-3 text-center font-semibold text-white disabled:opacity-60">Continue with LINE</button>
-        <p className="mt-4 rounded-lg bg-slate-950 p-3 text-sm text-slate-400">Browser ที่ยังไม่ยืนยันตัวตนเป็น Guest และเห็นเฉพาะ Published content — ใช้ LINE เพื่อสมัคร/เข้าแบบ Member</p>
+        <button disabled={busy} onClick={googleLogin} className="mt-3 block w-full rounded-xl border border-slate-700 bg-slate-100 px-4 py-3 text-center font-semibold text-slate-900 disabled:opacity-60">Continue with Google</button>
+        <p className="mt-4 rounded-lg bg-slate-950 p-3 text-sm text-slate-400">Browser ที่ยังไม่ยืนยันตัวตนเป็น Guest และเห็นเฉพาะ Published content — ใช้ LINE หรือ Google เพื่อสมัคร/เข้าแบบ Member</p>
         <a href={LINE_LIFF_URL} className="mt-3 block text-center text-xs text-slate-500">เปิดผ่านแอป LINE</a>
         {message ? <p className="mt-4 text-sm text-red-300">{message}</p> : null}
       </section>
