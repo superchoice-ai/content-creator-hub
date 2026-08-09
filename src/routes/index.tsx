@@ -81,7 +81,7 @@ function Index() {
       </header>
 
       <main className="mx-auto max-w-5xl px-6 py-10">
-        {!admin.allowed ? <section id="register" className="mb-8 rounded-xl border border-border bg-card p-5"><h2 className="font-semibold">Guest access</h2><p className="mt-2 text-sm text-muted-foreground">ขณะนี้เห็นเฉพาะ Published content เข้าสู่ระบบด้วย Google หรือเปิดผ่าน LINE LIFF เพื่อสมัคร/ใช้งาน Member; สิทธิ์ Admin อนุมัติโดยผู้ดูแล</p><Link to="/login" className="mt-3 inline-block rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground">เข้าสู่ระบบหรือสมัครใช้งาน</Link></section> : null}
+        {!admin.allowed ? <section id="register" className="mb-8 rounded-xl border border-border bg-card p-5"><h2 className="font-semibold">Guest access</h2><p className="mt-2 text-sm text-muted-foreground">ขณะนี้เห็นเฉพาะ Published content เข้าสู่ระบบด้วย Google หรือเปิดผ่าน LINE เพื่อสมัคร/ใช้งาน Member; สิทธิ์ Admin อนุมัติโดยผู้ดูแล</p><Link to="/login" className="mt-3 inline-block rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground">เข้าสู่ระบบหรือสมัครใช้งาน</Link></section> : null}
         {posts.length === 0 ? (
           <div className="rounded-lg border border-dashed border-border p-10 text-center">
             <h2 className="text-lg font-medium text-foreground">ยังไม่มีคอนเทนต์</h2>
