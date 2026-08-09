@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { formatPostDate } from "@/lib/format-date";
+import { useAdminAccess } from "@/lib/use-admin-access";
 
 type PostCard = {
   id: string;
@@ -45,6 +46,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const admin = useAdminAccess();
   const { posts } = Route.useLoaderData() as { posts: PostCard[] };
 
   return (
@@ -65,15 +67,21 @@ function Index() {
               {posts.length} posts
             </span>
 
-            {/* Link to Publish page so UI is discoverable */}
-            <Link to="/publish" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">
-              Publish
-            </Link>
+            {admin.allowed ? (
+              <>
+                <Link to="/cms" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">CMS</Link>
+                <Link to="/heygen" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">HeyGen</Link>
+                <Link to="/publish" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">Publish</Link>
+              </>
+            ) : (
+              <Link to="/login" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">Login</Link>
+            )}
           </div>
         </div>
       </header>
 
       <main className="mx-auto max-w-5xl px-6 py-10">
+        {!admin.allowed ? <section id="register" className="mb-8 rounded-xl border border-border bg-card p-5"><h2 className="font-semibold">Guest access</h2><p className="mt-2 text-sm text-muted-foreground">ขณะนี้เห็นเฉพาะ Published content เข้าสู่ระบบด้วย Google หรือเปิดผ่าน LINE LIFF เพื่อสมัคร/ใช้งาน Member; สิทธิ์ Admin อนุมัติโดยผู้ดูแล</p><Link to="/login" className="mt-3 inline-block rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground">เข้าสู่ระบบหรือสมัครใช้งาน</Link></section> : null}
         {posts.length === 0 ? (
           <div className="rounded-lg border border-dashed border-border p-10 text-center">
             <h2 className="text-lg font-medium text-foreground">ยังไม่มีคอนเทนต์</h2>

@@ -1,5 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useAdminAccess } from "@/lib/use-admin-access";
 
 export const Route = createFileRoute("/publish/")({ component: PublishRoute });
 
@@ -12,7 +13,8 @@ type Channel =
   | "threads"
   | "x"
   | "line_oa"
-  | "linkedin";
+  | "linkedin"
+  | "tiktok";
 type ChannelDraft = {
   title?: string;
   caption?: string;
@@ -33,6 +35,7 @@ const CHANNELS: { id: Channel; label: string }[] = [
   { id: "x", label: "X" },
   { id: "line_oa", label: "LINE OA" },
   { id: "linkedin", label: "LinkedIn" },
+  { id: "tiktok", label: "TikTok" },
 ];
 
 function driveFileId(value: string) {
@@ -41,6 +44,7 @@ function driveFileId(value: string) {
 }
 
 function PublishRoute() {
+  const admin = useAdminAccess();
   const [sourceType, setSourceType] = useState<SourceType>("google_drive");
   const [driveValue, setDriveValue] = useState("");
   const [localFile, setLocalFile] = useState<File | null>(null);
@@ -62,15 +66,19 @@ function PublishRoute() {
   const [videoApproved, setVideoApproved] = useState(false);
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
+  const [tiktokConsent, setTiktokConsent] = useState(false);
+  const [tiktokPrivacy, setTiktokPrivacy] = useState("SELF_ONLY");
+  const [tiktokCreatorInfo, setTiktokCreatorInfo] = useState<Record<string, unknown> | null>(null);
 
   const sourceReady =
     sourceType === "google_drive"
       ? driveFileId(driveValue).length > 5
       : sourceType === "local_upload"
-        ? !!localFile
+        ? !!localFile && localFile.size <= 100 * 1024 * 1024
         : true;
   const previewReady = selected.length > 0 && Object.keys(drafts).length > 0;
-  const liveReady = dryRun || (approved && token.length > 0);
+  const tiktokReady = !selected.includes("tiktok") || dryRun || (!!tiktokCreatorInfo && tiktokConsent);
+  const liveReady = (dryRun || (approved && token.length > 0)) && tiktokReady;
   const source = useMemo(
     () =>
       sourceType === "google_drive"
@@ -101,7 +109,7 @@ function PublishRoute() {
     try {
       const response = await fetch("/api/publish/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "X-Admin-Access-Token": admin.accessToken },
         body: JSON.stringify({
           sourceType,
           brief: { title: topic.trim(), objective, audience: audience.trim() },
@@ -123,6 +131,24 @@ function PublishRoute() {
       setStatus(
         `ผิดพลาด: ${error instanceof Error ? error.message : String(error)}`,
       );
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function loadTikTokCreatorInfo() {
+    setBusy(true);
+    setStatus("กำลังอ่าน TikTok Creator Info…");
+    try {
+      const response = await fetch("/api/tiktok/creator-info", {
+        headers: { Authorization: `Bearer ${admin.accessToken}` },
+      });
+      const result = await response.json();
+      if (!response.ok || result.error?.code) throw new Error(result.error?.message ?? result.error ?? "Creator Info failed");
+      setTiktokCreatorInfo(result.data ?? result);
+      setStatus("TikTok Creator Info พร้อม — กรุณาเลือก Privacy และยืนยัน Consent");
+    } catch (error) {
+      setStatus(`ผิดพลาด: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setBusy(false);
     }
@@ -153,7 +179,7 @@ function PublishRoute() {
         form.set("dry_run", "false");
         const uploadResponse = await fetch("/api/publish/upload", {
           method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}`, "X-Admin-Access-Token": admin.accessToken },
           body: form,
         });
         const upload = await uploadResponse.json();
@@ -169,6 +195,7 @@ function PublishRoute() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-Admin-Access-Token": admin.accessToken,
           ...(dryRun ? {} : { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify({
@@ -181,6 +208,13 @@ function PublishRoute() {
               audience,
             },
             channels: drafts,
+            tiktok: selected.includes("tiktok") ? {
+              creatorInfoFetched: !!tiktokCreatorInfo,
+              creatorInfo: tiktokCreatorInfo,
+              consent: tiktokConsent,
+              privacyLevel: tiktokPrivacy,
+              status: dryRun ? "VALIDATED_DRY_RUN" : "SUBMITTED",
+            } : undefined,
             heygen:
               sourceType === "heygen"
                 ? {
@@ -219,6 +253,9 @@ function PublishRoute() {
       setBusy(false);
     }
   }
+
+  if (admin.loading) return <main className="min-h-screen bg-slate-950 p-8 text-white">Checking admin access…</main>;
+  if (!admin.allowed) return <main className="min-h-screen bg-slate-950 p-8 text-white">Admin only. <Link to="/login" className="text-indigo-300">Login</Link></main>;
 
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-8 text-slate-100">
@@ -263,11 +300,15 @@ function PublishRoute() {
               />
             )}
             {sourceType === "local_upload" && (
+              <div className="space-y-2">
               <input
                 type="file"
                 accept="video/*"
                 onChange={(e) => setLocalFile(e.target.files?.[0] ?? null)}
               />
+              <p className="text-xs text-slate-400">ไฟล์ไม่เกิน 100 MB ใช้ Protected Storage; ไฟล์ใหญ่กว่านี้ให้ใช้ Google Drive URL/File ID</p>
+              {localFile && localFile.size > 100 * 1024 * 1024 && <p className="text-sm text-amber-300">ไฟล์เกิน 100 MB — กรุณาเลือก Google Drive</p>}
+              </div>
             )}
             {sourceType === "heygen" && (
               <div className="grid gap-3 sm:grid-cols-2">
@@ -359,6 +400,30 @@ function PublishRoute() {
             Generate Preview (AI 1 ครั้ง)
           </button>
         </div>
+        {selected.includes("tiktok") && (
+          <div className="rounded-2xl border border-pink-800 bg-slate-900 p-5">
+            <h2 className="text-lg font-semibold">TikTok Direct Post</h2>
+            <p className="mt-1 text-sm text-slate-400">Creator Info ต้องถูกอ่านก่อนโพสต์จริง และผู้ใช้ต้องเลือก Privacy พร้อมให้ Consent</p>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <button onClick={loadTikTokCreatorInfo} disabled={busy} className="rounded-lg bg-pink-600 px-4 py-2 disabled:opacity-40">
+                Query Creator Info
+              </button>
+              <select value={tiktokPrivacy} onChange={(e) => setTiktokPrivacy(e.target.value)} className="rounded-lg bg-slate-950 p-2">
+                <option value="SELF_ONLY">Only me</option>
+                <option value="FOLLOWER_OF_CREATOR">Followers</option>
+                <option value="MUTUAL_FOLLOW_FRIENDS">Friends</option>
+                <option value="PUBLIC_TO_EVERYONE">Everyone</option>
+              </select>
+              <label className="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked={tiktokConsent} onChange={(e) => setTiktokConsent(e.target.checked)} />
+                ยืนยันว่าได้ตรวจ Preview, Privacy และอนุญาตให้โพสต์
+              </label>
+              <span className={tiktokCreatorInfo ? "text-emerald-300" : "text-amber-300"}>
+                {tiktokCreatorInfo ? "Creator Info ready" : "Creator Info required"}
+              </span>
+            </div>
+          </div>
+        )}
         {Object.keys(drafts).length > 0 && (
           <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
             <h2 className="mb-4 text-lg font-semibold">4. Preview / Edit</h2>

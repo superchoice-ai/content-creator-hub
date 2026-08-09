@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { adminError, requireAdmin } from "@/lib/admin-auth.server";
 
 const ALLOWED = [
   "youtube",
@@ -9,6 +10,7 @@ const ALLOWED = [
   "x",
   "line_oa",
   "linkedin",
+  "tiktok",
 ];
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -28,6 +30,7 @@ export const Route = createFileRoute("/api/publish/send")({
     handlers: {
       POST: async ({ request }) => {
         try {
+          await requireAdmin(request);
           const body = await request.json();
           const {
             source,
@@ -58,6 +61,11 @@ export const Route = createFileRoute("/api/publish/send")({
               { error: "selected channel is unsupported or missing its draft" },
               400,
             );
+          if (selectedChannels.includes("tiktok")) {
+            const tiktok = payload.tiktok;
+            if (!dry_run && (!tiktok?.creatorInfoFetched || tiktok?.consent !== true || !["PUBLIC_TO_EVERYONE", "MUTUAL_FOLLOW_FRIENDS", "FOLLOWER_OF_CREATOR", "SELF_ONLY"].includes(tiktok?.privacyLevel)))
+              return json({ error: "TikTok live publish requires Creator Info, explicit consent and a valid privacy level" }, 409);
+          }
           if (scheduleAt && Number.isNaN(Date.parse(scheduleAt)))
             return json({ error: "scheduleAt must be a valid date" }, 400);
           if (
@@ -142,10 +150,8 @@ export const Route = createFileRoute("/api/publish/send")({
             202,
           );
         } catch (error) {
-          return json(
-            { error: error instanceof Error ? error.message : String(error) },
-            500,
-          );
+          if (error instanceof Response) return adminError(error);
+          return json({ error: error instanceof Error ? error.message : String(error) }, 500);
         }
       },
     },

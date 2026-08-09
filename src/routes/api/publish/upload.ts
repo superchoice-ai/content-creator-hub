@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { adminError, requireAdmin } from "@/lib/admin-auth.server";
 
-const MAX_BYTES = 500 * 1024 * 1024;
+const MAX_BYTES = 100 * 1024 * 1024;
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
@@ -17,6 +18,7 @@ export const Route = createFileRoute("/api/publish/upload")({
     handlers: {
       POST: async ({ request }) => {
         try {
+          await requireAdmin(request);
           if (!authorized(request)) return json({ error: "unauthorized" }, 401);
 
           const form = await request.formData();
@@ -26,7 +28,7 @@ export const Route = createFileRoute("/api/publish/upload")({
 
           if (!(file instanceof File)) return json({ error: "video file is required" }, 400);
           if (!file.type.startsWith("video/")) return json({ error: "only video files are accepted" }, 415);
-          if (file.size > MAX_BYTES) return json({ error: "file exceeds 500 MB; use Google Drive for larger videos" }, 413);
+          if (file.size > MAX_BYTES) return json({ error: "file exceeds 100 MB; use Google Drive URL/File ID" }, 413);
           if (!approved || dryRun) return json({ error: "local upload requires approved=true and dry_run=false" }, 409);
 
           const n8nUrl = process.env["N8N_YOUTUBE_UPLOAD_WEBHOOK_URL"];
@@ -52,6 +54,7 @@ export const Route = createFileRoute("/api/publish/upload")({
           try { result = text ? JSON.parse(text) : {}; } catch { result = { response: text }; }
           return json({ ok: true, uploadId, filename: file.name, ...result }, 201);
         } catch (error) {
+          if (error instanceof Response) return adminError(error);
           return json({ error: error instanceof Error ? error.message : String(error) }, 500);
         }
       },
