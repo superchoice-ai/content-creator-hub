@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import type { ContentBrief as ContentBriefType } from '../../src/routes/publish/schema';
+import type { ContentBrief as ContentBriefType } from '@/routes/publish/schema';
 
 interface Props {
   initial?: ContentBriefType;

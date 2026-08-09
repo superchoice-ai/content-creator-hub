@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { AIResponse, ChannelPayload } from '../../src/routes/publish/schema';
+import type { AIResponse, ChannelPayload } from '@/routes/publish/schema';
 import { createHeygen, sendPublish } from '../../services/publish.service';
 
 interface Props {

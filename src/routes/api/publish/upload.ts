@@ -44,7 +44,7 @@ export const Route = createFileRoute("/api/publish/upload")({
 
           const upstream = await fetch(n8nUrl, {
             method: "POST",
-            headers: n8nSecret ? { "X-Webhook-Secret": n8nSecret } : undefined,
+            headers: n8nSecret ? { "X-Webhook-Secret": n8nSecret } : {},
             body: outgoing,
           });
           const text = await upstream.text();

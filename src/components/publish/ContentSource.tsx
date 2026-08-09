@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { HeygenOptions } from '../../src/routes/publish/schema';
+import type { HeygenOptions } from '@/routes/publish/schema';
 
 interface Props {
   onChange: (data: { sourceType: string; googleDriveFileId?: string; localFile?: File | null; heygenOptions?: HeygenOptions | null }) => void;
@@ -13,7 +13,7 @@ export default function ContentSource({ onChange, initial }: Props) {
   const [heygenOptions, setHeygenOptions] = useState<HeygenOptions>({ avatarId: '', voiceId: '', language: 'th', aspectRatio: '9:16' });
 
   function emit() {
-    onChange({ sourceType, googleDriveFileId: googleDriveFileId || undefined, localFile, heygenOptions: sourceType === 'heygen' ? heygenOptions : undefined });
+    onChange({ sourceType, ...(googleDriveFileId ? { googleDriveFileId } : {}), localFile, ...(sourceType === "heygen" ? { heygenOptions } : {}) });
   }
 
   return (
@@ -35,7 +35,7 @@ export default function ContentSource({ onChange, initial }: Props) {
       {sourceType === 'local_upload' && (
         <div>
           <label>Local file</label>
-          <input type="file" onChange={(e) => { setLocalFile(e.target.files ? e.target.files[0] : null); emit(); }} />
+          <input type="file" onChange={(e) => { setLocalFile(e.target.files?.[0] ?? null); emit(); }} />
         </div>
       )}
 

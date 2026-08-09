@@ -66,7 +66,7 @@ function CmsPage() {
         </div>
         <aside className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
           <h2 className="font-semibold">Recent content</h2>
-          <ul className="mt-4 space-y-3">{posts.map((post) => <li key={String(post.id)} className="rounded-lg bg-slate-950 p-3"><strong>{String(post.title)}</strong><p className="text-xs text-slate-400">{String(post.status)}</p></li>)}</ul>
+          <ul className="mt-4 space-y-3">{posts.map((post) => <li key={String(post["id"])} className="rounded-lg bg-slate-950 p-3"><strong>{String(post["title"])}</strong><p className="text-xs text-slate-400">{String(post["status"])}</p></li>)}</ul>
         </aside>
       </section>
     </main>

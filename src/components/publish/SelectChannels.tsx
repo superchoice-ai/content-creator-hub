@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { ChannelPayload } from '../../src/routes/publish/schema';
+import type { ChannelPayload } from '@/routes/publish/schema';
 
 interface Props {
   initial?: { channels?: string[]; perChannelOptions?: Record<string, any> };
@@ -19,7 +19,7 @@ export default function SelectChannels({ initial, onChange }: Props) {
   }
 
   function setYoutubePrivacy(p: 'public'|'private'|'unlisted') {
-    setPerChannelOptions((prev) => ({ ...prev, youtube: { ...(prev.youtube||{}), privacy: p } }));
+    setPerChannelOptions((prev) => ({ ...prev, youtube: { ...(prev['youtube']||{}), privacy: p } }));
   }
 
   function setSchedule(ch: string, iso?: string) {
@@ -40,14 +40,14 @@ export default function SelectChannels({ initial, onChange }: Props) {
             {ch === 'youtube' && channels.includes('youtube') && (
               <div style={{marginLeft:20}}>
                 <label>Privacy: </label>
-                <select value={perChannelOptions.youtube?.privacy || 'private'} onChange={(e) => setYoutubePrivacy(e.target.value as any)}>
+                <select value={perChannelOptions['youtube']?.privacy || 'private'} onChange={(e) => setYoutubePrivacy(e.target.value as any)}>
                   <option value="public">Public</option>
                   <option value="unlisted">Unlisted</option>
                   <option value="private">Private</option>
                 </select>
                 <div>
                   <label>Schedule (ISO datetime) </label>
-                  <input type="datetime-local" value={perChannelOptions.youtube?.schedule || ''} onChange={(e) => setSchedule('youtube', e.target.value || undefined)} />
+                  <input type="datetime-local" value={perChannelOptions['youtube']?.schedule || ''} onChange={(e) => setSchedule('youtube', e.target.value || undefined)} />
                 </div>
               </div>
             )}
