@@ -2,11 +2,25 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-function canonicalProjectRef(): string | undefined {
-  const ref =
-    import.meta.env['VITE_SUPABASE_PROJECT_ID'] || process.env['SUPABASE_PROJECT_ID'];
-  return ref || undefined;
+const viteEnv = import.meta.env as unknown as Record<string, string | undefined>;
+
+function serverEnv(key: string): string | undefined {
+  try {
+    return typeof process !== 'undefined' ? process.env?.[key] : undefined;
+  } catch {
+    return undefined;
+  }
 }
+
+function readEnv(viteKey: string, serverKey: string): string | undefined {
+  return viteEnv[viteKey] || serverEnv(serverKey);
+}
+
+function canonicalProjectRef(): string | undefined {
+  return readEnv('VITE_SUPABASE_PROJECT_ID', 'SUPABASE_PROJECT_ID') || undefined;
+}
+
+
 
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith('sb_publishable_') || value.startsWith('sb_secret_');
@@ -52,11 +66,12 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 }
 
 function createSupabaseClient() {
-  const configuredUrl =
-    import.meta.env['VITE_SUPABASE_URL'] || process.env['SUPABASE_URL'];
-  const publishableKey =
-    import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'] ||
-    process.env['SUPABASE_PUBLISHABLE_KEY'];
+  const configuredUrl = readEnv('VITE_SUPABASE_URL', 'SUPABASE_URL');
+  const publishableKey = readEnv(
+    'VITE_SUPABASE_PUBLISHABLE_KEY',
+    'SUPABASE_PUBLISHABLE_KEY',
+  );
+
 
   if (!configuredUrl || !publishableKey) {
     const missing = [

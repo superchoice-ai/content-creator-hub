@@ -4,7 +4,7 @@ import ContentBrief from './ContentBrief';
 import SelectChannels from './SelectChannels';
 import PreviewApproval from './PreviewApproval';
 import { generatePreview as apiGenerate } from '../../services/publish.service';
-import type { PublishFormState } from '../../src/routes/publish/schema';
+import type { PublishFormState } from '@/routes/publish/schema';
 
 export default function PublishPage() {
   const [sourceData, setSourceData] = useState<any>({ sourceType: 'google_drive' });
@@ -22,7 +22,6 @@ export default function PublishPage() {
       const body: PublishFormState = {
         sourceType: sourceData.sourceType,
         googleDriveFileId: sourceData.googleDriveFileId,
-        localFileId: undefined,
         heygenOptions: sourceData.heygenOptions,
         brief,
         channels: channelsState.channels,
