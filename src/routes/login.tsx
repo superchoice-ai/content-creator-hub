@@ -59,18 +59,17 @@ function LoginPage() {
 
   async function googleLogin() {
     sessionStorage.setItem(RETURN_URL_KEY, "/");
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/` },
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin,
     });
-    if (error) {
-      setMessage(
-        error.message.includes("provider is not enabled")
-          ? "Google Login ยังไม่ได้เปิดใน Supabase กรุณาเปิด Google provider ก่อน"
-          : error.message,
-      );
+    if (result.error) {
+      setMessage(result.error.message);
+      return;
     }
+    if (result.redirected) return;
+    window.location.replace(safeReturnUrl());
   }
+
 
   async function lineLogin() {
     try {
