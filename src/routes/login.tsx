@@ -106,7 +106,7 @@ function LoginPage() {
         <button disabled={busy} onClick={lineLogin} className="mt-6 block w-full rounded-xl bg-[#06c755] px-4 py-3 text-center font-semibold text-white disabled:opacity-60">Continue with LINE</button>
         <button disabled={busy} onClick={googleLogin} className="mt-3 block w-full rounded-xl border border-slate-700 bg-slate-100 px-4 py-3 text-center font-semibold text-slate-900 disabled:opacity-60">Continue with Google</button>
         <p className="mt-4 rounded-lg bg-slate-950 p-3 text-sm text-slate-400">Browser ที่ยังไม่ยืนยันตัวตนเป็น Guest และเห็นเฉพาะ Published content — ใช้ LINE หรือ Google เพื่อสมัคร/เข้าแบบ Member</p>
-        <a href={LINE_LIFF_URL} className="mt-3 block text-center text-xs text-slate-500">เปิดผ่านแอป LINE</a>
+        <a href={LINE_LIFF_URL} target="_blank" rel="noopener noreferrer" className="mt-3 block text-center text-xs text-slate-500">เปิดผ่านแอป LINE</a>
         {message ? <p className="mt-4 text-sm text-red-300">{message}</p> : null}
       </section>
     </main>
