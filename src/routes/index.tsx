@@ -77,14 +77,20 @@ function Index() {
             </span>
 
             {admin.allowed ? (
-              <>
-                <Link to="/cms" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">CMS</Link>
-                <Link to="/heygen" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">HeyGen</Link>
-                <Link to="/publish" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">Publish</Link>
-              </>
+              <details className="relative">
+                <summary className="cursor-pointer list-none rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">
+                  Admin
+                </summary>
+                <nav className="absolute right-0 z-20 mt-2 w-44 overflow-hidden rounded-md border border-border bg-card shadow-lg">
+                  <Link to="/publish" className="block px-3 py-2 text-sm hover:bg-muted">Publish</Link>
+                  <Link to="/cms" className="block px-3 py-2 text-sm hover:bg-muted">CMS</Link>
+                  <Link to="/heygen" className="block px-3 py-2 text-sm hover:bg-muted">HeyGen</Link>
+                </nav>
+              </details>
             ) : (
               <Link to="/login" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">Login</Link>
             )}
+
           </div>
         </div>
       </header>
