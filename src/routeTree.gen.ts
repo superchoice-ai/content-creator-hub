@@ -10,12 +10,61 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as TiktokVerificationRouteImport } from './routes/tiktok-verification'
+import { Route as CmsIndexRouteImport } from './routes/cms/index'
+import { Route as HeygenIndexRouteImport } from './routes/heygen/index'
 import { Route as PostsSlugRouteImport } from './routes/posts.$slug'
+import { Route as PublishIndexRouteImport } from './routes/publish/index'
+import { Route as ApiAdminSessionRouteImport } from './routes/api/admin/session'
+import { Route as ApiCmsPostsRouteImport } from './routes/api/cms/posts'
+import { Route as ApiHeygenAssetsRouteImport } from './routes/api/heygen/assets'
+import { Route as ApiHeygenCatalogRouteImport } from './routes/api/heygen/catalog'
 import { Route as ApiPublicPublishRouteImport } from './routes/api/public/publish'
+import { Route as ApiPublishGenerateRouteImport } from './routes/api/publish/generate'
+import { Route as ApiPublishSendRouteImport } from './routes/api/publish/send'
+import { Route as ApiPublishUploadRouteImport } from './routes/api/publish/upload'
+import { Route as ApiTiktokCreatorInfoRouteImport } from './routes/api/tiktok/creator-info'
+import { Route as ApiTiktokStatusRouteImport } from './routes/api/tiktok/status'
+import { Route as ApiAuthLineLiffRouteImport } from './routes/api/auth/line/liff'
+import { Route as ApiAuthLineStartRouteImport } from './routes/api/auth/line/start'
+import { Route as ApiAuthProfileSyncRouteImport } from './routes/api/auth/profile/sync'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TiktokVerificationRoute = TiktokVerificationRouteImport.update({
+  id: '/tiktok-verification',
+  path: '/tiktok-verification',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CmsIndexRoute = CmsIndexRouteImport.update({
+  id: '/cms/',
+  path: '/cms/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HeygenIndexRoute = HeygenIndexRouteImport.update({
+  id: '/heygen/',
+  path: '/heygen/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PostsSlugRoute = PostsSlugRouteImport.update({
@@ -23,40 +72,248 @@ const PostsSlugRoute = PostsSlugRouteImport.update({
   path: '/posts/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PublishIndexRoute = PublishIndexRouteImport.update({
+  id: '/publish/',
+  path: '/publish/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminSessionRoute = ApiAdminSessionRouteImport.update({
+  id: '/api/admin/session',
+  path: '/api/admin/session',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCmsPostsRoute = ApiCmsPostsRouteImport.update({
+  id: '/api/cms/posts',
+  path: '/api/cms/posts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHeygenAssetsRoute = ApiHeygenAssetsRouteImport.update({
+  id: '/api/heygen/assets',
+  path: '/api/heygen/assets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHeygenCatalogRoute = ApiHeygenCatalogRouteImport.update({
+  id: '/api/heygen/catalog',
+  path: '/api/heygen/catalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicPublishRoute = ApiPublicPublishRouteImport.update({
   id: '/api/public/publish',
   path: '/api/public/publish',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublishGenerateRoute = ApiPublishGenerateRouteImport.update({
+  id: '/api/publish/generate',
+  path: '/api/publish/generate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublishSendRoute = ApiPublishSendRouteImport.update({
+  id: '/api/publish/send',
+  path: '/api/publish/send',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublishUploadRoute = ApiPublishUploadRouteImport.update({
+  id: '/api/publish/upload',
+  path: '/api/publish/upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTiktokCreatorInfoRoute = ApiTiktokCreatorInfoRouteImport.update({
+  id: '/api/tiktok/creator-info',
+  path: '/api/tiktok/creator-info',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTiktokStatusRoute = ApiTiktokStatusRouteImport.update({
+  id: '/api/tiktok/status',
+  path: '/api/tiktok/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthLineLiffRoute = ApiAuthLineLiffRouteImport.update({
+  id: '/api/auth/line/liff',
+  path: '/api/auth/line/liff',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthLineStartRoute = ApiAuthLineStartRouteImport.update({
+  id: '/api/auth/line/start',
+  path: '/api/auth/line/start',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthProfileSyncRoute = ApiAuthProfileSyncRouteImport.update({
+  id: '/api/auth/profile/sync',
+  path: '/api/auth/profile/sync',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
+  '/tiktok-verification': typeof TiktokVerificationRoute
   '/posts/$slug': typeof PostsSlugRoute
+  '/cms/': typeof CmsIndexRoute
+  '/heygen/': typeof HeygenIndexRoute
+  '/publish/': typeof PublishIndexRoute
+  '/api/admin/session': typeof ApiAdminSessionRoute
+  '/api/cms/posts': typeof ApiCmsPostsRoute
+  '/api/heygen/assets': typeof ApiHeygenAssetsRoute
+  '/api/heygen/catalog': typeof ApiHeygenCatalogRoute
   '/api/public/publish': typeof ApiPublicPublishRoute
+  '/api/publish/generate': typeof ApiPublishGenerateRoute
+  '/api/publish/send': typeof ApiPublishSendRoute
+  '/api/publish/upload': typeof ApiPublishUploadRoute
+  '/api/tiktok/creator-info': typeof ApiTiktokCreatorInfoRoute
+  '/api/tiktok/status': typeof ApiTiktokStatusRoute
+  '/api/auth/line/liff': typeof ApiAuthLineLiffRoute
+  '/api/auth/line/start': typeof ApiAuthLineStartRoute
+  '/api/auth/profile/sync': typeof ApiAuthProfileSyncRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
+  '/tiktok-verification': typeof TiktokVerificationRoute
   '/posts/$slug': typeof PostsSlugRoute
+  '/cms': typeof CmsIndexRoute
+  '/heygen': typeof HeygenIndexRoute
+  '/publish': typeof PublishIndexRoute
+  '/api/admin/session': typeof ApiAdminSessionRoute
+  '/api/cms/posts': typeof ApiCmsPostsRoute
+  '/api/heygen/assets': typeof ApiHeygenAssetsRoute
+  '/api/heygen/catalog': typeof ApiHeygenCatalogRoute
   '/api/public/publish': typeof ApiPublicPublishRoute
+  '/api/publish/generate': typeof ApiPublishGenerateRoute
+  '/api/publish/send': typeof ApiPublishSendRoute
+  '/api/publish/upload': typeof ApiPublishUploadRoute
+  '/api/tiktok/creator-info': typeof ApiTiktokCreatorInfoRoute
+  '/api/tiktok/status': typeof ApiTiktokStatusRoute
+  '/api/auth/line/liff': typeof ApiAuthLineLiffRoute
+  '/api/auth/line/start': typeof ApiAuthLineStartRoute
+  '/api/auth/profile/sync': typeof ApiAuthProfileSyncRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
+  '/tiktok-verification': typeof TiktokVerificationRoute
   '/posts/$slug': typeof PostsSlugRoute
+  '/cms/': typeof CmsIndexRoute
+  '/heygen/': typeof HeygenIndexRoute
+  '/publish/': typeof PublishIndexRoute
+  '/api/admin/session': typeof ApiAdminSessionRoute
+  '/api/cms/posts': typeof ApiCmsPostsRoute
+  '/api/heygen/assets': typeof ApiHeygenAssetsRoute
+  '/api/heygen/catalog': typeof ApiHeygenCatalogRoute
   '/api/public/publish': typeof ApiPublicPublishRoute
+  '/api/publish/generate': typeof ApiPublishGenerateRoute
+  '/api/publish/send': typeof ApiPublishSendRoute
+  '/api/publish/upload': typeof ApiPublishUploadRoute
+  '/api/tiktok/creator-info': typeof ApiTiktokCreatorInfoRoute
+  '/api/tiktok/status': typeof ApiTiktokStatusRoute
+  '/api/auth/line/liff': typeof ApiAuthLineLiffRoute
+  '/api/auth/line/start': typeof ApiAuthLineStartRoute
+  '/api/auth/profile/sync': typeof ApiAuthProfileSyncRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/posts/$slug' | '/api/public/publish'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/privacy'
+    | '/terms'
+    | '/tiktok-verification'
+    | '/posts/$slug'
+    | '/cms/'
+    | '/heygen/'
+    | '/publish/'
+    | '/api/admin/session'
+    | '/api/cms/posts'
+    | '/api/heygen/assets'
+    | '/api/heygen/catalog'
+    | '/api/public/publish'
+    | '/api/publish/generate'
+    | '/api/publish/send'
+    | '/api/publish/upload'
+    | '/api/tiktok/creator-info'
+    | '/api/tiktok/status'
+    | '/api/auth/line/liff'
+    | '/api/auth/line/start'
+    | '/api/auth/profile/sync'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/posts/$slug' | '/api/public/publish'
-  id: '__root__' | '/' | '/posts/$slug' | '/api/public/publish'
+  to:
+    | '/'
+    | '/login'
+    | '/privacy'
+    | '/terms'
+    | '/tiktok-verification'
+    | '/posts/$slug'
+    | '/cms'
+    | '/heygen'
+    | '/publish'
+    | '/api/admin/session'
+    | '/api/cms/posts'
+    | '/api/heygen/assets'
+    | '/api/heygen/catalog'
+    | '/api/public/publish'
+    | '/api/publish/generate'
+    | '/api/publish/send'
+    | '/api/publish/upload'
+    | '/api/tiktok/creator-info'
+    | '/api/tiktok/status'
+    | '/api/auth/line/liff'
+    | '/api/auth/line/start'
+    | '/api/auth/profile/sync'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/privacy'
+    | '/terms'
+    | '/tiktok-verification'
+    | '/posts/$slug'
+    | '/cms/'
+    | '/heygen/'
+    | '/publish/'
+    | '/api/admin/session'
+    | '/api/cms/posts'
+    | '/api/heygen/assets'
+    | '/api/heygen/catalog'
+    | '/api/public/publish'
+    | '/api/publish/generate'
+    | '/api/publish/send'
+    | '/api/publish/upload'
+    | '/api/tiktok/creator-info'
+    | '/api/tiktok/status'
+    | '/api/auth/line/liff'
+    | '/api/auth/line/start'
+    | '/api/auth/profile/sync'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
+  PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
+  TiktokVerificationRoute: typeof TiktokVerificationRoute
   PostsSlugRoute: typeof PostsSlugRoute
+  CmsIndexRoute: typeof CmsIndexRoute
+  HeygenIndexRoute: typeof HeygenIndexRoute
+  PublishIndexRoute: typeof PublishIndexRoute
+  ApiAdminSessionRoute: typeof ApiAdminSessionRoute
+  ApiCmsPostsRoute: typeof ApiCmsPostsRoute
+  ApiHeygenAssetsRoute: typeof ApiHeygenAssetsRoute
+  ApiHeygenCatalogRoute: typeof ApiHeygenCatalogRoute
   ApiPublicPublishRoute: typeof ApiPublicPublishRoute
+  ApiPublishGenerateRoute: typeof ApiPublishGenerateRoute
+  ApiPublishSendRoute: typeof ApiPublishSendRoute
+  ApiPublishUploadRoute: typeof ApiPublishUploadRoute
+  ApiTiktokCreatorInfoRoute: typeof ApiTiktokCreatorInfoRoute
+  ApiTiktokStatusRoute: typeof ApiTiktokStatusRoute
+  ApiAuthLineLiffRoute: typeof ApiAuthLineLiffRoute
+  ApiAuthLineStartRoute: typeof ApiAuthLineStartRoute
+  ApiAuthProfileSyncRoute: typeof ApiAuthProfileSyncRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -68,11 +325,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tiktok-verification': {
+      id: '/tiktok-verification'
+      path: '/tiktok-verification'
+      fullPath: '/tiktok-verification'
+      preLoaderRoute: typeof TiktokVerificationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cms/': {
+      id: '/cms/'
+      path: '/cms'
+      fullPath: '/cms/'
+      preLoaderRoute: typeof CmsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/heygen/': {
+      id: '/heygen/'
+      path: '/heygen'
+      fullPath: '/heygen/'
+      preLoaderRoute: typeof HeygenIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/posts/$slug': {
       id: '/posts/$slug'
       path: '/posts/$slug'
       fullPath: '/posts/$slug'
       preLoaderRoute: typeof PostsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/publish/': {
+      id: '/publish/'
+      path: '/publish'
+      fullPath: '/publish/'
+      preLoaderRoute: typeof PublishIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/session': {
+      id: '/api/admin/session'
+      path: '/api/admin/session'
+      fullPath: '/api/admin/session'
+      preLoaderRoute: typeof ApiAdminSessionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cms/posts': {
+      id: '/api/cms/posts'
+      path: '/api/cms/posts'
+      fullPath: '/api/cms/posts'
+      preLoaderRoute: typeof ApiCmsPostsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/heygen/assets': {
+      id: '/api/heygen/assets'
+      path: '/api/heygen/assets'
+      fullPath: '/api/heygen/assets'
+      preLoaderRoute: typeof ApiHeygenAssetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/heygen/catalog': {
+      id: '/api/heygen/catalog'
+      path: '/api/heygen/catalog'
+      fullPath: '/api/heygen/catalog'
+      preLoaderRoute: typeof ApiHeygenCatalogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/publish': {
@@ -82,14 +416,99 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPublishRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/publish/generate': {
+      id: '/api/publish/generate'
+      path: '/api/publish/generate'
+      fullPath: '/api/publish/generate'
+      preLoaderRoute: typeof ApiPublishGenerateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/publish/send': {
+      id: '/api/publish/send'
+      path: '/api/publish/send'
+      fullPath: '/api/publish/send'
+      preLoaderRoute: typeof ApiPublishSendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/publish/upload': {
+      id: '/api/publish/upload'
+      path: '/api/publish/upload'
+      fullPath: '/api/publish/upload'
+      preLoaderRoute: typeof ApiPublishUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/tiktok/creator-info': {
+      id: '/api/tiktok/creator-info'
+      path: '/api/tiktok/creator-info'
+      fullPath: '/api/tiktok/creator-info'
+      preLoaderRoute: typeof ApiTiktokCreatorInfoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/tiktok/status': {
+      id: '/api/tiktok/status'
+      path: '/api/tiktok/status'
+      fullPath: '/api/tiktok/status'
+      preLoaderRoute: typeof ApiTiktokStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/line/liff': {
+      id: '/api/auth/line/liff'
+      path: '/api/auth/line/liff'
+      fullPath: '/api/auth/line/liff'
+      preLoaderRoute: typeof ApiAuthLineLiffRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/line/start': {
+      id: '/api/auth/line/start'
+      path: '/api/auth/line/start'
+      fullPath: '/api/auth/line/start'
+      preLoaderRoute: typeof ApiAuthLineStartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/profile/sync': {
+      id: '/api/auth/profile/sync'
+      path: '/api/auth/profile/sync'
+      fullPath: '/api/auth/profile/sync'
+      preLoaderRoute: typeof ApiAuthProfileSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
+  PrivacyRoute: PrivacyRoute,
+  TermsRoute: TermsRoute,
+  TiktokVerificationRoute: TiktokVerificationRoute,
   PostsSlugRoute: PostsSlugRoute,
+  CmsIndexRoute: CmsIndexRoute,
+  HeygenIndexRoute: HeygenIndexRoute,
+  PublishIndexRoute: PublishIndexRoute,
+  ApiAdminSessionRoute: ApiAdminSessionRoute,
+  ApiCmsPostsRoute: ApiCmsPostsRoute,
+  ApiHeygenAssetsRoute: ApiHeygenAssetsRoute,
+  ApiHeygenCatalogRoute: ApiHeygenCatalogRoute,
   ApiPublicPublishRoute: ApiPublicPublishRoute,
+  ApiPublishGenerateRoute: ApiPublishGenerateRoute,
+  ApiPublishSendRoute: ApiPublishSendRoute,
+  ApiPublishUploadRoute: ApiPublishUploadRoute,
+  ApiTiktokCreatorInfoRoute: ApiTiktokCreatorInfoRoute,
+  ApiTiktokStatusRoute: ApiTiktokStatusRoute,
+  ApiAuthLineLiffRoute: ApiAuthLineLiffRoute,
+  ApiAuthLineStartRoute: ApiAuthLineStartRoute,
+  ApiAuthProfileSyncRoute: ApiAuthProfileSyncRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
