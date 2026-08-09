@@ -13,18 +13,16 @@ export function useAdminAccess() {
     async function check() {
       const { data } = await supabase.auth.getSession();
       const accessToken = data.session?.access_token ?? "";
-      if (!accessToken) {
-        if (active) setState({ loading: false, allowed: false, accessToken: "" });
-        return;
-      }
-      const response = await fetch("/api/admin/session", { headers: { Authorization: `Bearer ${accessToken}` } });
+      const response = await fetch("/api/admin/session", { headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {}, credentials: "same-origin" });
       if (active) setState({ loading: false, allowed: response.ok, accessToken });
     }
     void check();
     const { data: subscription } = supabase.auth.onAuthStateChange(() => void check());
+    window.addEventListener("sc:identity", check);
     return () => {
       active = false;
       subscription.subscription.unsubscribe();
+      window.removeEventListener("sc:identity", check);
     };
   }, []);
 
