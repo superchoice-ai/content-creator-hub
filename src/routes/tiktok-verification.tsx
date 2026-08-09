@@ -21,7 +21,7 @@ function TikTokVerificationPage() {
           <li>Require explicit Admin approval and disable publishing during dry-run.</li>
           <li>Record the request, result, and platform publish ID for audit.</li>
         </ul>
-        <p className="rounded-xl bg-slate-950 p-4 text-sm text-amber-300">Domain verification uses either a TikTok-provided signature file route or DNS TXT on a SuperChoice-owned custom domain. Verification values are stored as deployment secrets and are never committed to this repository.</p>
+        <p className="rounded-xl bg-slate-950 p-4 text-sm text-amber-300">Domain verification uses a TikTok-provided signature file at the verified URL prefix.</p>
       </section>
     </main>
   );
