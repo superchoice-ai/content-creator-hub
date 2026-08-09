@@ -14,6 +14,11 @@ type PostCard = {
   published_at: string;
 };
 
+type IndexLoaderData = {
+  posts: PostCard[];
+  databaseReady: boolean;
+};
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -32,22 +37,26 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  loader: async () => {
-    const { data, error } = await supabase
-      .from("cms_posts")
-      .select("id, slug, title, excerpt, cover_image_url, tags, channel, published_at")
-      .eq("status", "published")
-      .order("published_at", { ascending: false })
-      .limit(30);
-    if (error) throw error;
-    return { posts: (data ?? []) as PostCard[] };
+  loader: async (): Promise<IndexLoaderData> => {
+    try {
+      const { data, error } = await supabase
+        .from("cms_posts")
+        .select("id, slug, title, excerpt, cover_image_url, tags, channel, published_at")
+        .eq("status", "published")
+        .order("published_at", { ascending: false })
+        .limit(30);
+      if (error) throw error;
+      return { posts: (data ?? []) as PostCard[], databaseReady: true };
+    } catch {
+      return { posts: [], databaseReady: false };
+    }
   },
   component: Index,
 });
 
 function Index() {
   const admin = useAdminAccess();
-  const { posts } = Route.useLoaderData() as { posts: PostCard[] };
+  const { posts, databaseReady } = Route.useLoaderData() as IndexLoaderData;
 
   return (
     <div className="min-h-screen bg-background">
@@ -81,6 +90,14 @@ function Index() {
       </header>
 
       <main className="mx-auto max-w-5xl px-6 py-10">
+        {!databaseReady ? (
+          <section className="mb-8 rounded-xl border border-amber-300 bg-amber-50 p-5 text-amber-950">
+            <h2 className="font-semibold">กำลังเชื่อมต่อฐานข้อมูล</h2>
+            <p className="mt-2 text-sm">
+              Public Portal เปิดใช้งานได้ แต่ Content Feed และระบบ Login จะพร้อมหลังเชื่อมต่อ Supabase กลางเรียบร้อย
+            </p>
+          </section>
+        ) : null}
         {!admin.allowed ? <section id="register" className="mb-8 rounded-xl border border-border bg-card p-5"><h2 className="font-semibold">Guest access</h2><p className="mt-2 text-sm text-muted-foreground">ขณะนี้เห็นเฉพาะ Published content เข้าสู่ระบบด้วย Google หรือเปิดผ่าน LINE เพื่อสมัคร/ใช้งาน Member; สิทธิ์ Admin อนุมัติโดยผู้ดูแล</p><Link to="/login" className="mt-3 inline-block rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground">เข้าสู่ระบบหรือสมัครใช้งาน</Link></section> : null}
         {posts.length === 0 ? (
           <div className="rounded-lg border border-dashed border-border p-10 text-center">
