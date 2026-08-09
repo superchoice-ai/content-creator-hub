@@ -1,10 +1,15 @@
 import type { User } from "@supabase/supabase-js";
+import { readSession, verifySession } from "@/lib/portal-session.server";
 
 export type AdminSession = { user: User; role: "admin" };
 
 export async function requireAdmin(request: Request): Promise<AdminSession> {
   const token = request.headers.get("x-admin-access-token") ?? request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
-  if (!token) throw new Response("unauthorized", { status: 401 });
+  if (!token) {
+    const line = await verifySession(readSession(request));
+    if (line?.role === "admin") return { user: { id: line.sub } as User, role: "admin" };
+    throw new Response(line ? "forbidden" : "unauthorized", { status: line ? 403 : 401 });
+  }
 
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin.auth.getUser(token);
