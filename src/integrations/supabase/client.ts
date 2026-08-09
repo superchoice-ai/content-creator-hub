@@ -2,11 +2,19 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
+function serverEnv(key: string): string | undefined {
+  try {
+    return typeof process !== 'undefined' ? process.env?.[key] : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function canonicalProjectRef(): string | undefined {
-  const ref =
-    import.meta.env['VITE_SUPABASE_PROJECT_ID'] || process.env['SUPABASE_PROJECT_ID'];
+  const ref = import.meta.env.VITE_SUPABASE_PROJECT_ID || serverEnv('SUPABASE_PROJECT_ID');
   return ref || undefined;
 }
+
 
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith('sb_publishable_') || value.startsWith('sb_secret_');
