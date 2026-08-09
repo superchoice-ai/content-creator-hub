@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
+import { LINE_LIFF_ID, LINE_LIFF_URL } from "@/config/line";
 import { loadLiff } from "@/lib/liff-client";
 
 export const Route = createFileRoute("/login")({ component: LoginPage });
@@ -15,12 +16,11 @@ function LoginPage() {
     if (error) setMessage(error.message);
   }
   async function lineLogin() {
-    const liffId = import.meta.env["VITE_LINE_LIFF_ID"] as string | undefined;
-    const liffUrl = import.meta.env["VITE_LINE_LIFF_URL"] as string | undefined;
-    if (!liffId) return setMessage("VITE_LINE_LIFF_ID is not configured");
+    const liffId = LINE_LIFF_ID;
+    const liffUrl = LINE_LIFF_URL;
     const liff = await loadLiff();
     await liff.init({ liffId, withLoginOnExternalBrowser: false });
-    if (!liff.isInClient()) return window.location.assign(liffUrl || `https://liff.line.me/${liffId}`);
+    if (!liff.isInClient()) return window.location.assign(liffUrl);
     if (!liff.isLoggedIn()) liff.login({ redirectUri: window.location.href });
     else window.location.assign("/");
   }
