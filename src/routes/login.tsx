@@ -40,27 +40,6 @@ function LoginPage() {
     return () => window.removeEventListener("sc:identity", onIdentity);
   }, []);
 
-  async function googleLogin() {
-    setBusy(true);
-    setMessage("");
-    try {
-      sessionStorage.setItem(RETURN_URL_KEY, "/");
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
-      });
-      if (result.error) {
-        setMessage(result.error.message);
-        return;
-      }
-      if (result.redirected) return;
-      redirected.current = true;
-      window.location.replace(safeReturnUrl());
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : String(error));
-    } finally {
-      setBusy(false);
-    }
-  }
 
   async function lineLogin() {
     setBusy(true);
