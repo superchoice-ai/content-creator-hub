@@ -2,7 +2,15 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const viteEnv = import.meta.env as unknown as Record<string, string | undefined>;
+// Vite only inlines statically-written `import.meta.env.X` accesses, so these
+// must stay as literal property reads (no dynamic/bracket lookups).
+const BROWSER_ENV = {
+  VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL as string | undefined,
+  VITE_SUPABASE_PUBLISHABLE_KEY: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as
+    | string
+    | undefined,
+  VITE_SUPABASE_PROJECT_ID: import.meta.env.VITE_SUPABASE_PROJECT_ID as string | undefined,
+} as const;
 
 function serverEnv(key: string): string | undefined {
   try {
@@ -12,8 +20,8 @@ function serverEnv(key: string): string | undefined {
   }
 }
 
-function readEnv(viteKey: string, serverKey: string): string | undefined {
-  return viteEnv[viteKey] || serverEnv(serverKey);
+function readEnv(viteKey: keyof typeof BROWSER_ENV, serverKey: string): string | undefined {
+  return BROWSER_ENV[viteKey] || serverEnv(serverKey);
 }
 
 function canonicalProjectRef(): string | undefined {
