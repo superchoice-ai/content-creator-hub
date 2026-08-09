@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 import { useEffect, useState } from "react";
 import { LINE_LIFF_ID, LINE_LIFF_URL } from "@/config/line";
 import { loadLiff } from "@/lib/liff-client";
