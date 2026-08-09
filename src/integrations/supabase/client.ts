@@ -2,7 +2,11 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const CANONICAL_SUPABASE_PROJECT_REF = 'oyadomcsptmgudwuxwvq';
+function canonicalProjectRef(): string | undefined {
+  const ref =
+    import.meta.env['VITE_SUPABASE_PROJECT_ID'] || process.env['SUPABASE_PROJECT_ID'];
+  return ref || undefined;
+}
 
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith('sb_publishable_') || value.startsWith('sb_secret_');
@@ -16,12 +20,13 @@ function assertCanonicalSupabaseUrl(value: string): string {
     throw new Error('[Supabase] VITE_SUPABASE_URL/SUPABASE_URL is not a valid URL');
   }
 
+  const expectedRef = canonicalProjectRef();
   if (
     url.protocol !== 'https:' ||
-    url.hostname !== `${CANONICAL_SUPABASE_PROJECT_REF}.supabase.co`
+    (expectedRef && !url.hostname.startsWith(`${expectedRef}.`))
   ) {
     throw new Error(
-      `[Supabase] Backend drift detected. Expected project ${CANONICAL_SUPABASE_PROJECT_REF}`,
+      `[Supabase] Backend drift detected. Expected project ${expectedRef ?? 'unknown'}`,
     );
   }
   return url.origin;

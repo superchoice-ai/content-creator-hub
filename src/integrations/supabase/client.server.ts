@@ -2,7 +2,9 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const CANONICAL_SUPABASE_PROJECT_REF = 'oyadomcsptmgudwuxwvq';
+function canonicalProjectRef(): string | undefined {
+  return process.env['SUPABASE_PROJECT_ID'] || undefined;
+}
 
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith('sb_publishable_') || value.startsWith('sb_secret_');
@@ -16,12 +18,13 @@ function assertCanonicalSupabaseUrl(value: string): string {
     throw new Error('[Supabase server] SUPABASE_URL is not a valid URL');
   }
 
+  const expectedRef = canonicalProjectRef();
   if (
     url.protocol !== 'https:' ||
-    url.hostname !== `${CANONICAL_SUPABASE_PROJECT_REF}.supabase.co`
+    (expectedRef && !url.hostname.startsWith(`${expectedRef}.`))
   ) {
     throw new Error(
-      `[Supabase server] Backend drift detected. Expected project ${CANONICAL_SUPABASE_PROJECT_REF}`,
+      `[Supabase server] Backend drift detected. Expected project ${expectedRef ?? 'unknown'}`,
     );
   }
   return url.origin;
