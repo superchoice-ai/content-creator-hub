@@ -162,6 +162,26 @@ function Index() {
           </ul>
         )}
       </main>
+
+      <footer className="border-t border-border">
+        <div className="mx-auto flex max-w-5xl flex-col gap-3 px-6 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            SuperChoice AI — content creation and multi-channel publishing hub.
+          </p>
+          <nav className="flex flex-wrap items-center gap-4">
+            <Link to="/privacy" className="underline hover:text-foreground">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="underline hover:text-foreground">
+              Terms of Service
+            </Link>
+            <Link to="/tiktok-verification" className="underline hover:text-foreground">
+              TikTok Integration
+            </Link>
+          </nav>
+        </div>
+      </footer>
     </div>
   );
 }
+
