@@ -69,6 +69,10 @@ function Index() {
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
               Content Portal
             </h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Create, review and publish content to websites and social channels.
+            </p>
+
           </div>
 
           <div className="flex items-center gap-4">
