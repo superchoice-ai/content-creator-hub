@@ -69,6 +69,10 @@ function Index() {
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
               Content Portal
             </h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Create, review and publish content to websites and social channels.
+            </p>
+
           </div>
 
           <div className="flex items-center gap-4">
@@ -162,6 +166,26 @@ function Index() {
           </ul>
         )}
       </main>
+
+      <footer className="border-t border-border">
+        <div className="mx-auto flex max-w-5xl flex-col gap-3 px-6 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            SuperChoice AI — content creation and multi-channel publishing hub.
+          </p>
+          <nav className="flex flex-wrap items-center gap-4">
+            <Link to="/privacy" className="underline hover:text-foreground">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="underline hover:text-foreground">
+              Terms of Service
+            </Link>
+            <Link to="/tiktok-verification" className="underline hover:text-foreground">
+              TikTok Integration
+            </Link>
+          </nav>
+        </div>
+      </footer>
     </div>
   );
 }
+

@@ -44,11 +44,23 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+// Reviewers/crawlers often request page URLs with a trailing slash. Serve those
+// directly (200) instead of answering with a redirect.
+function stripTrailingSlash(request: Request): Request {
+  const url = new URL(request.url);
+  if (url.pathname.length > 1 && url.pathname.endsWith("/") && !url.pathname.startsWith("/api/")) {
+    url.pathname = url.pathname.replace(/\/+$/, "");
+    return new Request(url.toString(), request);
+  }
+  return request;
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
+      const response = await handler.fetch(stripTrailingSlash(request), env, ctx);
+
       return await normalizeCatastrophicSsrResponse(response);
     } catch (error) {
       console.error(error);
