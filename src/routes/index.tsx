@@ -22,21 +22,28 @@ type IndexLoaderData = {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SuperChoice AI Portal — Content Feed" },
+      { title: "SuperChoice AI Content Creator Hub — CMS & Multi-Channel Publishing" },
       {
         name: "description",
         content:
-          "คลังคอนเทนต์ของ SuperChoice AI ที่เผยแพร่อัตโนมัติจากระบบ n8n ไปยังทุกช่องทาง",
+          "SuperChoice AI Content Creator Hub: create, review and approve content, manage it in a built-in CMS with lightweight CRM, then publish to websites and social channels.",
       },
-      { property: "og:title", content: "SuperChoice AI Portal — Content Feed" },
+      {
+        property: "og:title",
+        content: "SuperChoice AI Content Creator Hub — CMS & Multi-Channel Publishing",
+      },
       {
         property: "og:description",
-        content: "คอนเทนต์ล่าสุดจากระบบเผยแพร่อัตโนมัติของ SuperChoice AI",
+        content:
+          "Content creation, review and approval with a built-in CMS, lightweight CRM and multi-channel publishing.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://superchoiceai.lovable.app/" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://superchoiceai.lovable.app/" }],
   }),
+
   loader: async (): Promise<IndexLoaderData> => {
     try {
       const { data, error } = await supabase
