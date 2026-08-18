@@ -140,7 +140,7 @@ function Index() {
           </div>
         </section>
 
-        <section aria-labelledby="platform" className="mb-12 scroll-mt-8" id="platform">
+        <section aria-labelledby="platform-heading" className="mb-12 scroll-mt-8" id="platform">
           <h2 id="platform-heading" className="text-2xl font-semibold tracking-tight">
             What the platform does
           </h2>
@@ -286,8 +286,11 @@ function Index() {
             <Link to="/terms" className="underline hover:text-foreground">
               Terms of Service
             </Link>
-            <Link to="/tiktok-verification" className="underline hover:text-foreground">
+            <Link to="/tiktok-integration" className="underline hover:text-foreground">
               TikTok Integration
+            </Link>
+            <Link to="/tiktok-verification" className="underline hover:text-foreground">
+              TikTok Verification
             </Link>
           </nav>
         </div>
