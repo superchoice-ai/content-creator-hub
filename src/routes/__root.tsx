@@ -78,14 +78,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "SuperChoice AI Content Creator Hub" },
+      {
+        name: "description",
+        content:
+          "Create, review, approve and publish content to your website and connected social channels.",
+      },
+      { name: "author", content: "SuperChoice AI" },
+      { property: "og:site_name", content: "SuperChoice AI Content Creator Hub" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+
     ],
     links: [
       {

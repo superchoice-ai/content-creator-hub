@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as TiktokIntegrationRouteImport } from './routes/tiktok-integration'
 import { Route as TiktokVerificationRouteImport } from './routes/tiktok-verification'
 import { Route as CmsIndexRouteImport } from './routes/cms/index'
 import { Route as HeygenIndexRouteImport } from './routes/heygen/index'
@@ -50,6 +51,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TiktokIntegrationRoute = TiktokIntegrationRouteImport.update({
+  id: '/tiktok-integration',
+  path: '/tiktok-integration',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TiktokVerificationRoute = TiktokVerificationRouteImport.update({
@@ -148,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/tiktok-integration': typeof TiktokIntegrationRoute
   '/tiktok-verification': typeof TiktokVerificationRoute
   '/posts/$slug': typeof PostsSlugRoute
   '/cms/': typeof CmsIndexRoute
@@ -172,6 +179,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/tiktok-integration': typeof TiktokIntegrationRoute
   '/tiktok-verification': typeof TiktokVerificationRoute
   '/posts/$slug': typeof PostsSlugRoute
   '/cms': typeof CmsIndexRoute
@@ -197,6 +205,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/tiktok-integration': typeof TiktokIntegrationRoute
   '/tiktok-verification': typeof TiktokVerificationRoute
   '/posts/$slug': typeof PostsSlugRoute
   '/cms/': typeof CmsIndexRoute
@@ -223,6 +232,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/terms'
+    | '/tiktok-integration'
     | '/tiktok-verification'
     | '/posts/$slug'
     | '/cms/'
@@ -247,6 +257,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/terms'
+    | '/tiktok-integration'
     | '/tiktok-verification'
     | '/posts/$slug'
     | '/cms'
@@ -271,6 +282,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/terms'
+    | '/tiktok-integration'
     | '/tiktok-verification'
     | '/posts/$slug'
     | '/cms/'
@@ -296,6 +308,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
+  TiktokIntegrationRoute: typeof TiktokIntegrationRoute
   TiktokVerificationRoute: typeof TiktokVerificationRoute
   PostsSlugRoute: typeof PostsSlugRoute
   CmsIndexRoute: typeof CmsIndexRoute
@@ -344,6 +357,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tiktok-integration': {
+      id: '/tiktok-integration'
+      path: '/tiktok-integration'
+      fullPath: '/tiktok-integration'
+      preLoaderRoute: typeof TiktokIntegrationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tiktok-verification': {
@@ -480,6 +500,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
+  TiktokIntegrationRoute: TiktokIntegrationRoute,
   TiktokVerificationRoute: TiktokVerificationRoute,
   PostsSlugRoute: PostsSlugRoute,
   CmsIndexRoute: CmsIndexRoute,

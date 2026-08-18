@@ -40,7 +40,7 @@ export default function PublishPage() {
 
   return (
     <div style={{ padding: 24 }}>
-      <h1>Publish (Demo Page)</h1>
+      <h1>Publish</h1>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20 }}>
         <section style={{ padding: 12, border: '1px solid #eee' }}>
           <ContentSource onChange={(d) => setSourceData(d)} initial={{ sourceType: sourceData.sourceType }} />
