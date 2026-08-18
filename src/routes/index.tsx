@@ -68,45 +68,145 @@ function Index() {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        <div className="mx-auto flex max-w-5xl flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+          <Link to="/" className="block">
+            <span className="block text-xs uppercase tracking-[0.2em] text-muted-foreground">
               SuperChoice AI
-            </p>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Content Portal
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Create, review and publish content to websites and social channels.
-            </p>
-
-          </div>
-
-          <div className="flex items-center gap-4">
-            <span className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
-              {posts.length} posts
             </span>
+            <span className="block text-xl font-semibold tracking-tight text-foreground">
+              Content Creator Hub
+            </span>
+          </Link>
+
+          <nav aria-label="Main" className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <a href="#platform" className="text-muted-foreground hover:text-foreground">
+              Platform
+            </a>
+            <a href="#feed" className="text-muted-foreground hover:text-foreground">
+              Content feed
+            </a>
+            <Link to="/tiktok-integration" className="text-muted-foreground hover:text-foreground">
+              TikTok Integration
+            </Link>
+            <Link to="/privacy" className="text-muted-foreground hover:text-foreground">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="text-muted-foreground hover:text-foreground">
+              Terms of Service
+            </Link>
 
             {admin.allowed ? (
               <details className="relative">
                 <summary className="cursor-pointer list-none rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">
                   Admin
                 </summary>
-                <nav className="absolute right-0 z-20 mt-2 w-44 overflow-hidden rounded-md border border-border bg-card shadow-lg">
+                <div className="absolute right-0 z-20 mt-2 w-44 overflow-hidden rounded-md border border-border bg-card shadow-lg">
                   <Link to="/publish" className="block px-3 py-2 text-sm hover:bg-muted">Publish</Link>
                   <Link to="/cms" className="block px-3 py-2 text-sm hover:bg-muted">CMS</Link>
                   <Link to="/heygen" className="block px-3 py-2 text-sm hover:bg-muted">HeyGen</Link>
-                </nav>
+                </div>
               </details>
             ) : (
               <Link to="/login" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">Login</Link>
             )}
-
-          </div>
+          </nav>
         </div>
       </header>
 
       <main className="mx-auto max-w-5xl px-6 py-10">
+        <section aria-labelledby="hero" className="mb-12">
+          <h1 id="hero" className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            SuperChoice AI Content Creator Hub
+          </h1>
+          <p className="mt-4 max-w-2xl text-base text-muted-foreground">
+            A content management and publishing workspace for marketing teams. Create and
+            generate content, review and approve it, keep it organised in a built-in CMS with a
+            lightweight CRM of members, then publish the approved result to your website and
+            connected social channels.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a
+              href="#feed"
+              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            >
+              Browse published content
+            </a>
+            <Link
+              to="/tiktok-integration"
+              className="rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+            >
+              How TikTok publishing works
+            </Link>
+          </div>
+        </section>
+
+        <section aria-labelledby="platform" className="mb-12 scroll-mt-8" id="platform">
+          <h2 id="platform-heading" className="text-2xl font-semibold tracking-tight">
+            What the platform does
+          </h2>
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+            {[
+              {
+                title: "Content creation",
+                body: "Draft posts from a brief or generate copy, images and video assets, with source material stored alongside each item.",
+              },
+              {
+                title: "Review and approval",
+                body: "Every item passes a preview and approval gate. Draft and dry-run states never publish anything.",
+              },
+              {
+                title: "Built-in CMS",
+                body: "Approved posts are stored with slug, excerpt, cover image, tags and channel, and published to this public feed.",
+              },
+              {
+                title: "Lightweight CRM",
+                body: "Members who sign in are kept as a simple profile and role list used only for access and follow-up.",
+              },
+              {
+                title: "Multi-channel publishing",
+                body: "One approved item can be published to the website and to connected social channels such as TikTok, LINE, Facebook, Instagram and YouTube.",
+              },
+              {
+                title: "Audit and status",
+                body: "Each publish attempt records its request, result and platform publish identifier so outcomes can be verified.",
+              },
+            ].map((item) => (
+              <li key={item.title} className="rounded-xl border border-border bg-card p-5">
+                <h3 className="font-semibold text-card-foreground">{item.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{item.body}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section aria-labelledby="how" className="mb-12">
+          <h2 id="how" className="text-2xl font-semibold tracking-tight">
+            How a post reaches a channel
+          </h2>
+          <ol className="mt-6 grid gap-4 sm:grid-cols-4">
+            {[
+              ["1", "Create", "Write or generate the content and attach media."],
+              ["2", "Review", "Check the preview, destination account and settings."],
+              ["3", "Approve", "An authorized user explicitly approves the publish."],
+              ["4", "Publish", "The hub posts it and records the resulting status."],
+            ].map(([step, title, body]) => (
+              <li key={step} className="rounded-xl border border-border p-5">
+                <span className="text-xs font-semibold text-muted-foreground">STEP {step}</span>
+                <h3 className="mt-1 font-semibold">{title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{body}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <h2 id="feed" className="scroll-mt-8 text-2xl font-semibold tracking-tight">
+          Published content
+        </h2>
+        <p className="mt-2 mb-6 text-sm text-muted-foreground">
+          {posts.length} published {posts.length === 1 ? "post" : "posts"} — visible to everyone,
+          no sign-in required.
+        </p>
+
         {!databaseReady ? (
           <section className="mb-8 rounded-xl border border-amber-300 bg-amber-50 p-5 text-amber-950">
             <h2 className="font-semibold">กำลังเชื่อมต่อฐานข้อมูล</h2>
