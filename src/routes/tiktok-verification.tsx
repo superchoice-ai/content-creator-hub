@@ -1,6 +1,31 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/tiktok-verification")({ component: TikTokVerificationPage });
+export const Route = createFileRoute("/tiktok-verification")({
+  head: () => ({
+    meta: [
+      { title: "TikTok Domain Verification — SuperChoice AI Content Creator Hub" },
+      {
+        name: "description",
+        content:
+          "TikTok domain verification and Direct Post safeguards for SuperChoice AI Content Creator Hub. See /tiktok-integration for the full posting flow.",
+      },
+      {
+        property: "og:title",
+        content: "TikTok Domain Verification — SuperChoice AI Content Creator Hub",
+      },
+      {
+        property: "og:description",
+        content: "Approval-first TikTok Direct Post workflow and domain verification details.",
+      },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: "https://superchoiceai.lovable.app/tiktok-verification" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://superchoiceai.lovable.app/tiktok-verification" }],
+  }),
+  component: TikTokVerificationPage,
+});
+
 
 function TikTokVerificationPage() {
   return (

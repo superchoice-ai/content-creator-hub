@@ -1,6 +1,28 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/terms")({ component: TermsPage });
+export const Route = createFileRoute("/terms")({
+  head: () => ({
+    meta: [
+      { title: "Terms of Service — SuperChoice AI Content Creator Hub" },
+      {
+        name: "description",
+        content:
+          "Terms for using SuperChoice AI Content Creator Hub to prepare, review, approve and publish content to websites and social channels.",
+      },
+      { property: "og:title", content: "Terms of Service — SuperChoice AI Content Creator Hub" },
+      {
+        property: "og:description",
+        content: "Authorized use, review and publishing rules, TikTok consent and suspension terms.",
+      },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: "https://superchoiceai.lovable.app/terms" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://superchoiceai.lovable.app/terms" }],
+  }),
+  component: TermsPage,
+});
+
 
 function TermsPage() {
   return (

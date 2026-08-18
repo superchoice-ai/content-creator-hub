@@ -1,6 +1,28 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/privacy")({ component: PrivacyPage });
+export const Route = createFileRoute("/privacy")({
+  head: () => ({
+    meta: [
+      { title: "Privacy Policy — SuperChoice AI Content Creator Hub" },
+      {
+        name: "description",
+        content:
+          "How SuperChoice AI Content Creator Hub processes account, content and publishing data, and how connected platform access can be revoked.",
+      },
+      { property: "og:title", content: "Privacy Policy — SuperChoice AI Content Creator Hub" },
+      {
+        property: "og:description",
+        content: "Information processed, storage, sharing and user choices for SuperChoice AI.",
+      },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: "https://superchoiceai.lovable.app/privacy" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://superchoiceai.lovable.app/privacy" }],
+  }),
+  component: PrivacyPage,
+});
+
 
 function PrivacyPage() {
   return (
