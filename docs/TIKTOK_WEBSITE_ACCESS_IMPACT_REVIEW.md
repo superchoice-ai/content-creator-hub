@@ -85,3 +85,20 @@ Evidence recorded after implementation:
 - Guest render: homepage shows product explanation, CMS feed and legal links with no
   redirect to `/login`.
 - Not deployed: publish/deploy intentionally left to the caller.
+
+## 8. Recorded validation run (2026-08-18, dev server)
+
+- `bunx tsgo --noEmit`: no diagnostics (TYPECHECK_OK).
+- HTTP 200: `/`, `/privacy`, `/privacy/`, `/terms`, `/tiktok-integration`,
+  `/tiktok-integration/`, `/tiktok-verification`, `/login` — no login redirect on `/`.
+- Homepage head: `<title>SuperChoice AI Content Creator Hub — CMS &amp; Multi-Channel
+  Publishing</title>` with `rel="canonical" href="https://superchoiceai.lovable.app/"`.
+- `grep -c "Lovable App" src/routes/__root.tsx` → 0.
+- TikTok signature files present and unchanged (68 bytes each):
+  `public/tiktokCB8NijnB3v7VJEWAn48lgo8XAXKOcxJs.txt`,
+  `public/tiktokhExb7wXHJMQvTb5D1sqAaR3CGuKT7KrY.txt`,
+  `public/privacy/tiktokxi6WNZUjqUB9nS7b8GoeUGsGY8lO0o8W.txt`,
+  `public/terms/tiktokCGdf3N1TR65mUHLI0qLdtM0EFRGuUUlH.txt`,
+  `public/tiktok-verification/tiktokhExb7wXHJMQvTb5D1sqAaR3CGuKT7KrY.txt`.
+- `public/robots.txt` unchanged and crawlable (`Allow: /`).
+- No deploy performed.
