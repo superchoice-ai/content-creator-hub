@@ -1,3 +1,18 @@
+<!-- AI ENGINEERING COPILOT — MANDATORY START HERE -->
+> [!CAUTION]
+> **Every human and AI contributor MUST read `AI_ENGINEERING_COPILOT.md` BEFORE reasoning, planning, editing, committing, merging, publishing, deploying, testing, or taking any other action in this repository.**
+>
+> AI is an **AI Engineering Copilot**: it assists; it does not independently expand scope or make release decisions.
+>
+> **Explicit authorization required:** Do NOT Merge, Publish, Deploy, Commit to `main`, modify production, or expand scope unless the authorized owner explicitly requests that exact action.
+>
+> If an abnormal tool/provider condition occurs, check the relevant provider's **official status page**, record time/timezone and evidence, then report completed / in-progress-unknown / not-done work and the exact next step after recovery.
+>
+> Before any merge to `main` or direct commit to `main`, verify no PT-TEST/PB-TEST fixtures, temporary/debug data, secrets, generated artifacts, unfinished scope, or other test residue is being carried forward.
+>
+> **Mandatory reading order:** Read `AI_ENGINEERING_COPILOT.md` first, then continue with the repository governance below.
+<!-- AI ENGINEERING COPILOT — MANDATORY END -->
+
 <!-- LOVABLE:BEGIN -->
 > [!IMPORTANT]
 > This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
@@ -50,7 +65,6 @@ The review must state:
 
 The Supabase proxy/approval-workflow regression is the standing lesson: changing shared infrastructure without tracing every consumer can silently break previously working approval behavior and force costly regression recovery. This must not happen again.
 
-
 # CRITICAL RULE — Interpretation Confirmation Before Reasoning or Action
 
 > [!CAUTION]
@@ -73,167 +87,31 @@ Read-only inspection is allowed only to gather enough evidence to expose the amb
 
 ## Artifacts are not approval
 
-The presence of a name or capability in any repository artifact does not prove that it is:
-
-- an approved feature;
-- valid under current business rules;
-- in current scope;
-- safe to implement;
-- intended to be active;
-- authorized for production;
-- authorized for design or impact expansion.
-
-For example, an enum such as `restructure`, a dormant workflow, or a future roadmap entry MUST remain unsupported/fail-closed unless its business meaning and scope are explicitly confirmed.
+The presence of a name or capability in any repository artifact does not prove that it is an approved feature, valid under current business rules, in current scope, safe to implement, intended to be active, or authorized for production.
 
 ## Conflict precedence and stop rule
 
-Confirmed business invariants and explicit user decisions override inferred meaning from code, schema, enums, documentation, naming, or conventional industry practice.
-
-If a proposed interpretation conflicts with a confirmed rule, STOP. Do not “design an exception,” do not assume a future requirement, and do not continue merely because the user said “Continue.” Present the conflict and request a decision.
-
-“Continue” authorizes only the next work that is already confirmed and consistent with existing rules. It never confirms an unstated interpretation and never authorizes the next listed enum, phase, workflow, or roadmap item automatically.
-
-## No interpretation-by-convention
-
-Do not infer intent from best practices, common product behavior, technical possibility, industry terminology, or what a field/workflow normally means. Recommendations may be offered only after the actual business meaning is confirmed, and they must be clearly separated from confirmed requirements.
-
-## Fail-closed requirement
-
-If confirmation is missing, unclear, contradictory, or not attributable to an authorized decision maker:
-
-- keep the feature unsupported or disabled;
-- keep workflow dispatch fail-closed;
-- do not modify code, schema, data, documentation conclusions, or production behavior based on the interpretation;
-- record the unresolved question and wait.
-
-## Required evidence record
-
-The confirmation record must include:
-
-- artifact or wording that triggered interpretation;
-- proposed interpretation;
-- conflicts checked;
-- alternatives considered;
-- explicit confirmed meaning;
-- confirmer/decision owner;
-- scope authorized;
-- items explicitly not authorized.
-
-## Standing lessons
-
-The Supabase Proxy regression showed the danger of technical change without full dependency impact review. The `restructure` misunderstanding showed that even a detailed impact review is unsafe when it begins from an unconfirmed business interpretation. Both gates are mandatory: first confirm meaning, then perform full-project impact review.
-
+Confirmed business invariants and explicit user decisions override inferred meaning from code, schema, enums, documentation, naming, or conventional industry practice. If a proposed interpretation conflicts with a confirmed rule, STOP and request a decision.
 
 # CRITICAL RULE — System Readiness Gate
 
 > [!CAUTION]
-> This gate is mandatory before every actionable work session, continuation, development task, migration, deployment, workflow activation, external write, or production/data operation. A green status page alone is not proof that the project's actual path is healthy.
+> This gate is mandatory before every actionable work session, continuation, development task, migration, deployment, workflow activation, external write, or production/data operation.
 
-## Required readiness header
+Before reasoning toward implementation or taking action, state and record scope/exclusions, repository/branch/phase/environment, systems/dependency path, authorized and unauthorized operations, official provider status with timestamp/timezone, read-only project-path evidence, and final `GO`, `LIMITED GO`, or `NO-GO`.
 
-Before reasoning toward implementation or taking action, state and record:
+Check relevant providers' official status pages and run the smallest safe read-only project-path probe. Do not migrate, deploy, activate, merge, change production data, or perform external writes when a relevant dependency is degraded, unknown without a successful probe, returning timeouts/5xx, or inconsistent with the expected environment.
 
-- conversation/task scope and explicit exclusions;
-- repository, branch, phase/change set, and target environment (local/demo/staging/production);
-- exact systems and dependency path that the task will touch;
-- operations authorized now and operations that remain unauthorized;
-- official provider status checked, timestamp, timezone, and relevant component/region;
-- read-only smoke-test evidence for the actual project path;
-- final decision: `GO`, `LIMITED GO`, or `NO-GO`.
+# CRITICAL RULE — Explicit Authorization, Literal Read Scope, and Verified Capability
 
-Repeat the gate whenever scope changes, the environment changes, a new dependency is introduced, an incident begins, or more than 15 minutes have passed before a high-risk write.
+> [!CAUTION]
+> Do not create, modify, run, activate, publish, import, or delete any workflow or node unless the authorized owner has explicitly approved that exact action and scope.
 
-## Two-layer readiness check
+“Read/study/copy the .MD” means read/reference only; it does not authorize editing, committing, pushing, PRs, workflow/node creation, or development. Verify actual repository/branch/path/access capability before declaring failure.
 
-1. **Provider status:** Check every relevant provider's official status page. Never use an unofficial outage detector as acceptance evidence.
-2. **Project-path probe:** Run the smallest safe read-only check through the same route that the work will use. Examples include repository read, `SELECT now()`, a non-mutating API health request, webhook dry-run, or dependency-specific connectivity check.
-
-If a provider has no verified public status page, record `UNKNOWN — no verified public status page` and require a direct read-only probe. Do not silently substitute a third-party status site.
-
-## Fail-closed and degraded-mode rules
-
-- `NO-GO`: Do not migrate, deploy, activate, merge, change production data, or perform external writes when a relevant dependency is degraded, unknown without a successful probe, returning timeouts/5xx, or inconsistent with the expected environment.
-- `LIMITED GO`: Read-only inspection, local analysis, documentation, and isolated GitHub work may continue only when they do not depend on or write through the degraded path.
-- A timeout from Lovable Database Query Gateway/MCP does not by itself prove that the database is damaged or that a migration caused a lock. Correlate official incidents, direct database health, query-path behavior, logs, locks, and migration evidence before assigning root cause.
-- Never bypass approval, permission, audit, regression, or data-integrity controls to work around an unavailable provider.
-
-## Alternate-path and synchronization rule
-
-Work may be moved to another healthy system—such as preparing code or documentation in GitHub—only when the alternate path is explicitly within scope and does not require the unhealthy dependency. Before reflecting changes back into Lovable or another target system:
-
-1. re-run this readiness gate for the target path;
-2. confirm branch/environment alignment and inspect the complete diff;
-3. perform the mandatory impact review and interpretation confirmation;
-4. use the normal supported synchronization path;
-5. run regression tests after synchronization.
-
-Do not force-push, rewrite published history, manually patch generated state, or treat GitHub completion as proof that Lovable, Supabase, n8n, or production has applied the change.
-
-## Official status registry
-
-This registry is the minimum known project dependency set. Add any dependency discovered by the task before work begins.
-
-| System | Official status URL | Relevant scope |
-|---|---|---|
-| GitHub | https://www.githubstatus.com/ | Repository and Lovable synchronization |
-| Lovable | https://status.lovable.dev/ | Editor, Hosting, Cloud, MCP and API |
-| Supabase | https://status.supabase.com/ | Database, API Gateway, Auth and Storage |
-| n8n Cloud | https://status.n8n.cloud/ | Workflow execution and webhooks |
-| Google Workspace | https://www.google.com/appsstatus/dashboard/ | Drive, Gmail and connected Workspace services |
-| Google Cloud | https://status.cloud.google.com/ | Google Cloud APIs and Gemini-related cloud services |
-| LINE Platform | https://api.line-status.info/ | Messaging API, Webhook, LIFF and LINE Login |
-| Meta business products | https://metastatus.com/ | Facebook, Instagram, Threads and business APIs |
-| HeyGen | https://status.heygen.com/ | HeyGen app and API |
-
-
-TikTok and LinkedIn currently have no verified dedicated public status dashboard recorded here. Treat them as `UNKNOWN` until a task-specific official source and direct read-only API probe are checked.
+If explicit authorization, intended meaning, or verified capability is unclear: perform only minimum read-only inspection, then stop and wait.
 
 # CRITICAL RULE — Cloud Browser Continuity Assessment
 
 > [!CAUTION]
-> When normal development is blocked by an external provider or a failing tool path outside the project's control, do not default to waiting indefinitely. After checking official documentation and official service status, present Cloud Browser as a temporary continuity option only when a read-only feasibility assessment proves that it can safely continue the exact authorized work.
-
-## Mandatory order
-
-1. Check the current official documentation for the affected feature, API, limitation, authentication method, and supported recovery path.
-2. Check the official provider status page and incident history; record the timestamp, timezone, affected component/region, and incident link.
-3. Run the smallest safe read-only probe through the normal project path and preserve the exact error evidence.
-4. Identify whether the failure is provider-wide, account/project-specific, permission-related, configuration-related, or limited to a gateway/tool path.
-5. If the normal path remains blocked, explicitly propose a Cloud Browser feasibility assessment and obtain authorization before opening or using the signed-in browser session.
-6. Use Cloud Browser read-only first to verify the exact project and environment, authenticated identity, available data/schema/logs/admin surfaces, and whether the browser route is genuinely independent of the failing path.
-7. Classify the result as `GO`, `LIMITED GO`, or `NO-GO` before any development continues.
-
-## Feasibility decision
-
-- `GO`: The exact required path works, project/environment identity is verified, authorized actions are supported, data-integrity controls remain intact, and validation plus rollback are available.
-- `LIMITED GO`: Only explicitly bounded work may continue, such as read-only inspection, evidence collection, SQL preparation, documentation, or another isolated task that does not depend on the failed path.
-- `NO-GO`: Stop when authentication or environment identity is uncertain, the browser uses the same failing backend, required permissions or audit controls are missing, writes cannot be made atomic and reversible, or the risk to production/data integrity is unclear.
-
-A page loading successfully is not sufficient evidence. The assessment must prove that the exact operation needed for development can be completed and verified safely.
-
-## Safety and authorization boundaries
-
-- Cloud Browser is a continuity path, not permission to bypass access controls, provider safeguards, approval gates, audit requirements, or repository rules.
-- Do not enter, request, expose, or copy credentials or secrets in chat. Use only an existing authorized signed-in session and require manual user takeover when login is needed.
-- Read-only inspection may establish feasibility; it does not authorize a write, migration, deployment, merge, workflow activation, or production-data change.
-- Before any separately authorized write, require a backup or rollback plan, transaction/dry-run where supported, atomic scope, full impact review, and post-change regression evidence.
-- Recheck official status before merge, deployment, synchronization, or production/data operations. Return to the normal supported integration path after recovery.
-
-## Required continuity record
-
-Record:
-
-- task, repository, branch, project, and target environment;
-- official documentation and official status URLs checked;
-- timestamp and timezone;
-- exact normal-path failure and evidence;
-- Cloud Browser route tested and proof that it differs from or remains unaffected by the failed path;
-- authenticated identity/project verification without exposing secrets;
-- actions verified, actions not verified, and explicit exclusions;
-- decision: `GO`, `LIMITED GO`, or `NO-GO`;
-- rollback, validation, and synchronization plan;
-- owner authorization required before the next mutating action.
-
-## Standing example
-
-Supabase status (<https://status.supabase.com/>) and Lovable incident history (<https://status.lovable.dev/history>) are standing examples: an external gateway or platform incident may block normal development for days even when a separately authorized Cloud Browser path can still support bounded work. They are examples, not assumptions. Always verify the current official evidence and prove project-specific feasibility before recommending continuation.
+> When normal development is blocked by an external provider, first check official documentation and status, run a safe read-only probe, identify the failure class, and only then propose Cloud Browser as a temporary continuity option with explicit authorization. Cloud Browser never bypasses authorization, approval, audit, repository, or data-integrity controls.
